@@ -2,6 +2,7 @@ package edu.cs523.project3.model;
 
 public class Arc {
 	private double width=0, facing=0, range=0;
+	
 	public Arc(double facing, double width, double range) {
 		this.setWidth(width);
 		this.setFacing(facing);

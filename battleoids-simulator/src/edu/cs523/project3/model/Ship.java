@@ -4,13 +4,37 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 public class Ship {
-	private Point location;
+	private Point location = new Point(0,0);
 	private int velocity=0, defaultAction=0;
-	private double vector, facing;
+	private double vector=0, facing=0;
 	private Arc gun = new Arc(0, 0.1, 1);
 	private Score score = new Score();
 	private ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 	
+	public Ship(ArrayList<Sensor> sensors, int defaultAction, Point location, double facing, Arc gun){
+		this.sensors = sensors;
+		this.defaultAction = defaultAction;
+		this.location = location;
+		this.facing = facing;
+		this.gun = gun;
+	}
+	
+	public Ship(ArrayList<Sensor> sensors, int defaultAction, Point location, double facing){
+		this.sensors = sensors;
+		this.defaultAction = defaultAction;
+		this.location = location;
+		this.facing = facing;
+	}
+	
+	public Ship(ArrayList<Sensor> sensors, int defaultAction){
+		this.sensors = sensors;
+		this.defaultAction = defaultAction;
+	}
+	
+	public Ship(){}
+	
+
+
 	public Point getLocation() {
 		return location;
 	}

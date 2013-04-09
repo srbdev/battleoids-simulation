@@ -5,6 +5,18 @@ public class Sensor {
 	private Arc arc = new Arc();
 	private boolean active;
 	
+	public Sensor(){
+		this.mode = 0;
+		this.arc = new Arc();
+		this.active = false;
+	}
+	
+	public Sensor(int mode, Arc arc, boolean active){
+		this.mode = mode;
+		this.arc = arc;
+		this.active = active;
+	}
+	
 	public int getMode() {
 		return mode;
 	}
