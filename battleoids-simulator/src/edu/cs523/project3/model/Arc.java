@@ -35,11 +35,12 @@ public class Arc {
 		return range;
 	}
 	public void setRange(double range) {
-		if(range >= 0 ) this.range = range % 1;
-		else{
+		/*if(range > 1 ) this.range = range % 1;
+		else if(range < 0){
 			this.range = Math.abs(range % 1);
 			this.facing = (this.facing + 1) % 2;
-		}
+		}*/
+		this.range = range;
 	}
 	
 }

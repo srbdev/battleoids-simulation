@@ -7,7 +7,7 @@ public class Ship {
 	private Point location = new Point(0,0);
 	private int velocity=0, defaultAction=0;
 	private double vector=0, facing=0;
-	private Arc gun = new Arc(0, 0.1, 1);
+	private Arc gun = new Arc(0, 0.01, 1);
 	private Score score = new Score();
 	private ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 	
