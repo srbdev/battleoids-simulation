@@ -11,18 +11,6 @@ import java.awt.geom.*;
  * Class ShipViz
  * 	Visualization class for the ships.
  */
-/*public class ShipViz { 
-	
-	 * Generic ship generation and visualization test routine.
-	 * @param args
-	 */
-	/*public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
-}*/
-
 public class ShipViz extends Frame {
 
 	  public ShipViz() {
@@ -81,7 +69,7 @@ public class ShipViz extends Frame {
 		     double xold, yold, xnew, ynew;
 		     xold = x2;
 		     yold = y2;
-		     for(double angle=startAngle; angle>=endAngle;angle=angle-0.01){
+		     for(double angle=startAngle; angle>=endAngle;angle=angle-(1.0/180)){
 		    	 //System.out.println(shipArcStart + " " + shipArcEnd + " " + angle);
 		    	 xnew = x + (int) (Math.cos(angle*Math.PI)*radius);
 			     ynew = y - (int) (Math.sin(angle*Math.PI)*radius);
@@ -146,7 +134,14 @@ public class ShipViz extends Frame {
 			     if(cs.isActive()){
 			    	 //Set sensor color here. Will take care of this later.
 			    	 //TODO 
-			    	 g.setColor(Color.blue);
+			
+			    	 int test = s.getSensors().get(scount).getMode();
+				     if((test & Action.MOVE)==Action.MOVE)  g.setColor(Color.blue);
+				     if((test & Action.FIRE)==Action.FIRE)  g.setColor(Color.green);
+				     if((test & Action.LEFT)==Action.LEFT)  g.setColor(Color.yellow);
+				     if((test & Action.RIGHT)==Action.RIGHT)  g.setColor(Color.orange);
+				    
+			    	// g.setColor(Color.blue);
 			    	 
 			    	 //draw sensor arc
 			    	 int arcRange = (int)(cs.getArc().getRange()*maxRange);
@@ -164,16 +159,38 @@ public class ShipViz extends Frame {
 	     
 		 //Prepare Draw Window  
 		 Graphics2D g2d = (Graphics2D) g;
+		 RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		 g2d.setRenderingHints(rh);
+		 
 	     g2d.setColor(Color.black);
 	     g2d.fillRect(0, 0, getWidth(), getHeight());
 	     
+
+	     //Set the stroke width.
+	     //g2d.setStroke(new BasicStroke(1));
+	      
+	     
 	     //Define Ship
 	     Ship s = new Ship();								//new ship
+	     s.setFacing(0.5);									//Set ship Facing.
 	     Point p = new Point(getWidth()/2, getHeight()/2); 	//location is middle of current window.
-	     Arc marc = new Arc(0, .5, .75);					//sensor arc defined
-	     Sensor sens = new Sensor(1, marc, true);			//sensor defined
-	     s.getSensors().add(sens);							//add sensor to ship
 	     s.setLocation(p);									//set location of ship
+	     
+	     Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
+	     Sensor sens = new Sensor(2, marc, true);			//sensor defined
+	     s.getSensors().add(sens);							//add sensor to ship
+	     
+	     Arc marc2 = new Arc(.5, 1.0, .75);					//sensor arc defined
+	     Sensor sens2 = new Sensor(4, marc2, true);			//sensor defined
+	     s.getSensors().add(sens2);							//add sensor to ship
+	     
+	     Arc marc3 = new Arc(1.5, 1.0, .75);					//sensor arc defined
+	     Sensor sens3 = new Sensor(8, marc3, true);			//sensor defined
+	     s.getSensors().add(sens3);							//add sensor to ship
+	     
+	     Arc marc4 = new Arc(0, .5, .875);					//sensor arc defined
+	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
+	     s.getSensors().add(sens4);							//add sensor to ship
 	     
 	     //Draw Ship
 	     drawShip(g2d, s, "");     
