@@ -17,8 +17,9 @@ public class ShipViz extends Frame {
 	     //constructor
 	     super("Ship Sensor Visualization");
 	     this.add(new myCustomCanvas());
-	     this.setSize(500,500);
+	     this.setSize(506,529);
 	     this.show();
+	     this.setResizable(false);
 	     addWindowListener(new WindowEventHandler());
 	  }
 
@@ -69,8 +70,9 @@ public class ShipViz extends Frame {
 		     double xold, yold, xnew, ynew;
 		     xold = x2;
 		     yold = y2;
-		     for(double angle=startAngle; angle>=endAngle;angle=angle-(1.0/180)){
-		    	 //System.out.println(shipArcStart + " " + shipArcEnd + " " + angle);
+		  // for(double angle=startAngle; angle>=endAngle;angle=angle-(1.0/180)){
+		   for(double angle=startAngle; angle>=endAngle;angle=angle-0.001){
+			    	 //System.out.println(shipArcStart + " " + shipArcEnd + " " + angle);
 		    	 xnew = x + (int) (Math.cos(angle*Math.PI)*radius);
 			     ynew = y - (int) (Math.sin(angle*Math.PI)*radius);
 			     g.draw(new Line2D.Double(xold, yold, xnew, ynew));
@@ -112,12 +114,12 @@ public class ShipViz extends Frame {
 		 * @param g
 		 * @param s
 		 */
-		public void drawShip(Graphics2D g, Ship s, String label){
+		public void drawShip(Graphics2D g, Ship s, String label, int boardSize){
 
 		     //Board Declaration
-		     int size = getWidth()/2;
+		     int size = boardSize/2;
 		     int maxRange = size - 50;
-		     int shipSize = getWidth()/50;
+		     int shipSize = boardSize/50;
 		     
 		     //Loop through sensors and draw the arcs.
 		     //Draw the gun range Arc
@@ -163,7 +165,7 @@ public class ShipViz extends Frame {
 		 g2d.setRenderingHints(rh);
 		 
 	     g2d.setColor(Color.black);
-	     g2d.fillRect(0, 0, getWidth(), getHeight());
+	     g2d.fillRect(0, 0, 500, 500);
 	     
 
 	     //Set the stroke width.
@@ -173,7 +175,7 @@ public class ShipViz extends Frame {
 	     //Define Ship
 	     Ship s = new Ship();								//new ship
 	     s.setFacing(0.5);									//Set ship Facing.
-	     Point p = new Point(getWidth()/2, getHeight()/2); 	//location is middle of current window.
+	     Point p = new Point(250, 250); 	//location is middle of current window.
 	     s.setLocation(p);									//set location of ship
 	     
 	     Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
@@ -192,7 +194,19 @@ public class ShipViz extends Frame {
 	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
 	     s.getSensors().add(sens4);							//add sensor to ship
 	     
+	     Ship s2 = new Ship(s, 100, 100, 0);
+	     Ship s2b = new Ship(s, 600, 600, 0);
+	     Ship s2c = new Ship(s, 100, 600, 0);
+	     Ship s2d = new Ship(s, 600, 100, 0);
+	     
 	     //Draw Ship
-	     drawShip(g2d, s, "");     
+	     drawShip(g2d, s, "1", 500);     
+	     drawShip(g2d, s2, "2", 500);
+	     drawShip(g2d, s2b, "2", 500);
+	     drawShip(g2d, s2c, "2", 500);
+	     drawShip(g2d, s2d, "2", 500);
+	     
+	     
+	     
 	   }
 	}  

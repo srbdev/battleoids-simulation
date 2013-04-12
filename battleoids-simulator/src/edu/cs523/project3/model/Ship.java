@@ -11,6 +11,15 @@ public class Ship {
 	private Score score = new Score();
 	private ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 	
+	public Ship(Ship s, int x, int y, double facing){
+		this.sensors = s.getSensors();
+		this.defaultAction = s.getDefaultAction();
+		this.location.x = x;
+		this.location.y = y;
+		this.facing = facing;
+		this.gun = s.gun;
+	}
+	
 	public Ship(ArrayList<Sensor> sensors, int defaultAction, Point location, double facing, Arc gun){
 		this.sensors = sensors;
 		this.defaultAction = defaultAction;
