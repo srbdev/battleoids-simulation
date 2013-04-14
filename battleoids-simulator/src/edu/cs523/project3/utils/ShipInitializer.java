@@ -9,7 +9,7 @@ public class ShipInitializer
 	
 	public ShipInitializer() {}
 	
-	public Ship initialize(Ship ship)
+	public void initialize(Ship ship)
 	{
 		for (Sensor sensor : ship.getSensors())
 		{
@@ -19,8 +19,6 @@ public class ShipInitializer
 			
 			mutate(sensor);
 		}
-		
-		return ship;
 	}
 
 	private void mutate(Sensor sensor) 
