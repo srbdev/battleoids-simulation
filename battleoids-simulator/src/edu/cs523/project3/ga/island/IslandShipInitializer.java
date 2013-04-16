@@ -9,13 +9,13 @@ import edu.cs523.project3.model.Ship;
 
 public class IslandShipInitializer 
 {
-	private final double ON_SENSOR_PROB = 0.35; // Probability that a sensor is initialize to ON
-	private final int N_SENSORS = 10;			// Number of sensors for the ship
-	private final int DEFAULT_ACTION = 1;		// Default action for the ships is to move.
+	private final static double ON_SENSOR_PROB = 0.35; // Probability that a sensor is initialize to ON
+	private final static int N_SENSORS = 10;			// Number of sensors for the ship
+	private final static int DEFAULT_ACTION = 1;		// Default action for the ships is to move.
 	
 	public IslandShipInitializer() {}
 	
-	public Ship getInitializedShip()
+	public static Ship getInitializedShip()
 	{
 		Ship ship = new Ship();
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
@@ -35,7 +35,13 @@ public class IslandShipInitializer
 		return ship;
 	}
 	
-	private Arc getRandomArc()
+	public static int getNumberOfSensors()
+	{
+		return N_SENSORS;
+	}
+	
+	
+	private static Arc getRandomArc()
 	{
 		double facing = Math.random() * (2 * Math.PI);
 		double width = Math.random();
@@ -44,7 +50,7 @@ public class IslandShipInitializer
 		return new Arc(facing, width, range);
 	}
 	
-	private int getRandomMode()
+	private static int getRandomMode()
 	{
 		double die = Math.random();
 		
