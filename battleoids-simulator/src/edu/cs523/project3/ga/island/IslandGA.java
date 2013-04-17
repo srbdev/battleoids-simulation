@@ -7,11 +7,15 @@ import edu.cs523.project3.model.Ship;
 public class IslandGA 
 {
 	private double crossoverRate; // from 0 to 1
+	private double mutationRate;  // from 0 to 1
 	private double mutationRange;
 	
 	private ArrayList<Ship> ships;
 	private int populationSize;
 	
+	private double bestScore;
+	private double avgScore;
+	private Ship fittestShip;
 	
 	public IslandGA(int populationSize)
 	{
@@ -19,18 +23,28 @@ public class IslandGA
 		this.populationSize = populationSize;
 		
 		this.crossoverRate = 0.1;
+		this.mutationRate = 0.1;
 		this.mutationRange = 0.1; // equivalent to about 6 degrees mutation
+		
+		bestScore = 1;
+		avgScore = 1;
+		fittestShip = null;
 		
 		init(); // initializes the GA
 	}
 	
-	public IslandGA(int populationSize, double crossoverRate, double mutationRange)
+	public IslandGA(int populationSize, double crossoverRate, double mutationRate, double mutationRange)
 	{
 		ships = new ArrayList<Ship>();
 		
 		this.populationSize = populationSize;
 		this.crossoverRate = crossoverRate;
+		this.mutationRate = mutationRate;
 		this.mutationRange = mutationRange;
+		
+		bestScore = 1;
+		avgScore = 1;
+		fittestShip = null;
 		
 		init(); // initializes the GA
 	}
@@ -55,32 +69,73 @@ public class IslandGA
 	{
 		ArrayList<Ship> newShips = new ArrayList<Ship>();
 		
-		for (Ship ship : ships)
+		// collecting some statistics
+		bestScore = 0;
+		fittestShip = null;
+		double totalScores = 0;
+		
+		for (int i = 0; i < ships.size(); i++)
+		{
+			double energy = ships.get(i).getScore().energy;
+			
+			totalScores += energy;
+			if (energy > bestScore) 
+			{
+				bestScore = energy;
+				fittestShip = ships.get(i);
+			}
+		}
+		
+		avgScore = totalScores / ships.size();
+		
+		// evolution step
+		for (int i = 0; i < ships.size(); i++)
 		{
 			int[] parents = new int[2];
 			int[] candidates = new int[2];
 			
-			for (int i = 0; i < parents.length; i++)
+			for (int j = 0; j < parents.length; j++)
 			{
-				for (int j = 0; j < candidates.length; j++)
-					candidates[j] = (int)(Math.random() * populationSize);
+				for (int k = 0; k < candidates.length; k++)
+					candidates[k] = (int)(Math.random() * populationSize);
 					
 				while (candidates[0] == candidates[1])
 					candidates[1] = (int)(Math.random() * populationSize);
 				
 				if (ships.get(candidates[0]).getScore().energy > ships.get(candidates[1]).getScore().energy)
-					parents[i] = candidates[0];
+					parents[j] = candidates[0];
 				else
-					parents[i] = candidates[1];
+					parents[j] = candidates[1];
 			}
 			
-			//TODO crossover
+			Ship child = ships.get(parents[1]);
+			for (int j = 0; j < ships.get(i).getSensors().size(); j++)
+			{
+				if (Math.random() < this.crossoverRate)
+					child.getSensors().add(j, ships.get(parents[0]).getSensors().get(j));
+			}
+			
 			//TODO mutation
+			
+			newShips.add(child);
 		}
 		
-		//TODO collect statistics...
-		
 		this.ships = newShips;
+	}
+	
+	public double getBestScore()
+	{
+		return this.bestScore;
+	}
+	
+	public double getAverageScore()
+	{
+		return this.avgScore;
+	}
+	
+	public Ship getFittestShip()
+	{
+		return this.fittestShip;
 	}
 	
 	
