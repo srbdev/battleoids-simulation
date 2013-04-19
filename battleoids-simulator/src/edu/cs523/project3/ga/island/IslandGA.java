@@ -131,17 +131,12 @@ public class IslandGA
 					child.getSensors().add(j, ships.get(parents[0]).getSensors().get(j));
 			}
 			
-			this.mutate(child);
+			mutate(child);
 			
 			newShips.add(child);
 		}
 		
 		this.ships = newShips;
-	}
-	
-	public void mutate(Ship ship)
-	{
-		
 	}
 	
 	
@@ -174,6 +169,15 @@ public class IslandGA
 	
 	private void initWithSeed(Ship seed)
 	{
-		
+		for (int i = 0; i < populationSize; i++)
+			ships.add(IslandShipInitializer.getInitializedShipFromSeed(seed));
+	}
+	
+	private void mutate(Ship ship)
+	{
+		for (int i = 0; i < IslandShipInitializer.getNumberOfSensors(); i++)
+		{
+			
+		}
 	}
 }
