@@ -8,7 +8,6 @@ public class IslandGA
 {
 	private double crossoverRate; // from 0 to 1
 	private double mutationRate;  // from 0 to 1
-	private double mutationRange;
 	
 	private ArrayList<Ship> ships;
 	private int populationSize;
@@ -24,7 +23,6 @@ public class IslandGA
 		
 		this.crossoverRate = 0.1;
 		this.mutationRate = 0.1;
-		this.mutationRange = 0.1; // equivalent to about 6 degrees mutation
 		
 		bestScore = 0;
 		avgScore = 0;
@@ -40,7 +38,6 @@ public class IslandGA
 		
 		this.crossoverRate = 0.1;
 		this.mutationRate = 0.1;
-		this.mutationRange = 0.1; // equivalent to about 6 degrees mutation
 		
 		bestScore = 0;
 		avgScore = 0;
@@ -49,14 +46,13 @@ public class IslandGA
 		initWithSeed(seed); // initializes the GA
 	}
 	
-	public IslandGA(int populationSize, double crossoverRate, double mutationRate, double mutationRange)
+	public IslandGA(int populationSize, double crossoverRate, double mutationRate)
 	{
 		ships = new ArrayList<Ship>();
 		
 		this.populationSize = populationSize;
 		this.crossoverRate = crossoverRate;
 		this.mutationRate = mutationRate;
-		this.mutationRange = mutationRange;
 		
 		bestScore = 0;
 		avgScore = 0;
@@ -69,11 +65,6 @@ public class IslandGA
 	public double getCrossoverRate()
 	{
 		return this.crossoverRate;
-	}
-	
-	public double getMutationRange()
-	{
-		return this.mutationRange;
 	}
 	
 	public Ship getShip(int index)
@@ -177,7 +168,17 @@ public class IslandGA
 	{
 		for (int i = 0; i < IslandShipInitializer.getNumberOfSensors(); i++)
 		{
-			
+			if (Math.random() < this.mutationRate)
+			{
+				double die = Math.random();
+				
+				if (die <= 1/3)
+					ship.getSensors().get(i).setMode(IslandShipInitializer.getRandomMode());
+				else if (die > 1/3 && die <= 2/3)
+					ship.getSensors().get(i).setArc(IslandShipInitializer.getRandomArc());
+				else
+					ship.getSensors().get(i).setActive(ship.getSensors().get(i).isActive() ? false : true);
+			}
 		}
 	}
 }

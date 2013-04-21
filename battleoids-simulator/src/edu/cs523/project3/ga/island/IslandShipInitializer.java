@@ -53,7 +53,7 @@ public class IslandShipInitializer
 	}
 	
 	
-	private static Arc getRandomArc()
+	public static Arc getRandomArc()
 	{
 		double facing = Math.random() * (2 * Math.PI);
 		double width = Math.random();
@@ -62,7 +62,7 @@ public class IslandShipInitializer
 		return new Arc(facing, width, range);
 	}
 	
-	private static int getRandomMode()
+	public static int getRandomMode()
 	{
 		double die = Math.random();
 		
