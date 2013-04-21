@@ -20,13 +20,9 @@ public class IslandShipInitializer
 	public static Ship getInitializedShipFromSeed(Ship seed)
 	{
 		Ship ship = new Ship();
-		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		
-		for (int i = 0; i < N_SENSORS; i++)
-		{
-			Sensor sensor = seed.getSensors().get(i);
-			sensors.add(sensor);
-		}
+		ship.setSensors(seed.getSensors());
+		ship.setDefaultAction(seed.getDefaultAction());
 		
 		return ship;
 	}

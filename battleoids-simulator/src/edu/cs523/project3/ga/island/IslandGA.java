@@ -128,7 +128,7 @@ public class IslandGA
 			for (int j = 0; j < IslandShipInitializer.getNumberOfSensors(); j++)
 			{
 				if (Math.random() < this.crossoverRate)
-					child.getSensors().add(j, ships.get(parents[0]).getSensors().get(j));
+					child.getSensors().set(j, ships.get(parents[0]).getSensors().get(j));
 			}
 			
 			mutate(child);
