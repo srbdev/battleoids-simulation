@@ -11,11 +11,11 @@ public class ShipType {
 	
 	public static void main(String[] args){
 		
-		createSensors(15);
+		createSensors(36800);
 	}
 	
 	private ShipType(){
-		
+
 	}
 	
 	public static Ship newInstance(int typeNumber, int defaultAction){
@@ -55,17 +55,17 @@ public class ShipType {
 		boolean [] active = new boolean[16];
 		
 		/* figure out which sensors to activate */
-		for(int i = 0; i < active.length; i++){
+		for(int i = 0; i < s.length(); i++){
 			
 			if(i >= s.length()){
-				active[i] = false;
-				System.out.println("sensor " + (i) + " not activated");
+				active[s.length() - (1+i)] = false;
+				System.out.println("sensor " + (s.length() - (1+i)) + " not activated");
 			}else if(s.charAt(i) == '1'){
-				active[i] = true;
-				System.out.println("sensor " + (i) + " activated");
+				active[s.length() - (1+i)] = true;
+				System.out.println("sensor " + (s.length() - (1+i)) + " activated");
 			}else{
-				System.out.println("sensor " + (i) + " not activated");
-				active[i] = false;
+				System.out.println("sensor " + (s.length() - (1+i)) + " not activated");
+				active[s.length() - (1+i)] = false;
 			}
 			
 		}
@@ -92,7 +92,7 @@ public class ShipType {
 		
 		
 		/**** type 2  *****/
-		/**** with sensor 1 ****/
+		/**** with sensor 0 ****/
 		/**** no acceleration ****/
 		/**** aggressive ****/
 		/*sensor 5 turn right - if ship is anywhere on right */
@@ -105,7 +105,7 @@ public class ShipType {
 		
 		
 		/**** type 3 ****/
-		/** with sensor 1, 2 **/
+		/** with sensor 0, 1 **/
 		/***  passive ***/
 		/*sensor 7 turn left - when ship is front right (unless ship is in front (45 degree))  */
 		Sensor s6 = new Sensor(4, new Arc(1.625, .25, 1), active[6]);
@@ -135,7 +135,7 @@ public class ShipType {
 		
 		
 		/*** type 4 ***/
-		/*** with sensor 1 ***/
+		/*** with sensor 0 ***/
 		/*** Always firing and spinning right***/
 		/**** defensive ****/
 		/*sensor 13 - fire behind - hoping to get lucky some how */
@@ -153,7 +153,7 @@ public class ShipType {
 		
 		/** type 5 **/
 		/** avoidance - always accelerate **/
-		/** with sensors 7, 8, 9, 10, 11, 12 **/
+		/** with sensors 6, 7, 8, 9, 10, 11 **/
 		/*sensor 16 - accelerate if something is in front */
 		Sensor s15 = new Sensor(1, new Arc(0, .5, 1), active[15]);
 		sensors.add(s15);
