@@ -8,7 +8,6 @@ public class IslandGA
 {
 	private double crossoverRate; // from 0 to 1
 	private double mutationRate;  // from 0 to 1
-	private double mutationRange;
 	
 	private ArrayList<Ship> ships;
 	private int populationSize;
@@ -24,26 +23,39 @@ public class IslandGA
 		
 		this.crossoverRate = 0.1;
 		this.mutationRate = 0.1;
-		this.mutationRange = 0.1; // equivalent to about 6 degrees mutation
 		
-		bestScore = 1;
-		avgScore = 1;
+		bestScore = 0;
+		avgScore = 0;
 		fittestShip = null;
 		
 		init(); // initializes the GA
 	}
 	
-	public IslandGA(int populationSize, double crossoverRate, double mutationRate, double mutationRange)
+	public IslandGA(int populationSize, Ship seed)
+	{
+		ships = new ArrayList<Ship>();
+		this.populationSize = populationSize;
+		
+		this.crossoverRate = 0.1;
+		this.mutationRate = 0.1;
+		
+		bestScore = 0;
+		avgScore = 0;
+		fittestShip = null;
+		
+		initWithSeed(seed); // initializes the GA
+	}
+	
+	public IslandGA(int populationSize, double crossoverRate, double mutationRate)
 	{
 		ships = new ArrayList<Ship>();
 		
 		this.populationSize = populationSize;
 		this.crossoverRate = crossoverRate;
 		this.mutationRate = mutationRate;
-		this.mutationRange = mutationRange;
 		
-		bestScore = 1;
-		avgScore = 1;
+		bestScore = 0;
+		avgScore = 0;
 		fittestShip = null;
 		
 		init(); // initializes the GA
@@ -53,11 +65,6 @@ public class IslandGA
 	public double getCrossoverRate()
 	{
 		return this.crossoverRate;
-	}
-	
-	public double getMutationRange()
-	{
-		return this.mutationRange;
 	}
 	
 	public Ship getShip(int index)
@@ -109,19 +116,20 @@ public class IslandGA
 			}
 			
 			Ship child = ships.get(parents[1]);
-			for (int j = 0; j < ships.get(i).getSensors().size(); j++)
+			for (int j = 0; j < IslandShipInitializer.getNumberOfSensors(); j++)
 			{
 				if (Math.random() < this.crossoverRate)
-					child.getSensors().add(j, ships.get(parents[0]).getSensors().get(j));
+					child.getSensors().set(j, ships.get(parents[0]).getSensors().get(j));
 			}
 			
-			//TODO mutation
+			mutate(child);
 			
 			newShips.add(child);
 		}
 		
 		this.ships = newShips;
 	}
+	
 	
 	public double getBestScore()
 	{
@@ -138,10 +146,39 @@ public class IslandGA
 		return this.fittestShip;
 	}
 	
+	public ArrayList<Ship> getShips()
+	{
+		return this.ships;
+	}
+	
 	
 	private void init() 
 	{
 		for (int i = 0; i < populationSize; i++)
 			ships.add(IslandShipInitializer.getInitializedShip());
+	}
+	
+	private void initWithSeed(Ship seed)
+	{
+		for (int i = 0; i < populationSize; i++)
+			ships.add(IslandShipInitializer.getInitializedShipFromSeed(seed));
+	}
+	
+	private void mutate(Ship ship)
+	{
+		for (int i = 0; i < IslandShipInitializer.getNumberOfSensors(); i++)
+		{
+			if (Math.random() < this.mutationRate)
+			{
+				double die = Math.random();
+				
+				if (die <= 1/3)
+					ship.getSensors().get(i).setMode(IslandShipInitializer.getRandomMode());
+				else if (die > 1/3 && die <= 2/3)
+					ship.getSensors().get(i).setArc(IslandShipInitializer.getRandomArc());
+				else
+					ship.getSensors().get(i).setActive(ship.getSensors().get(i).isActive() ? false : true);
+			}
+		}
 	}
 }
