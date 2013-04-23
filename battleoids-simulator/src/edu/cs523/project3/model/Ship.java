@@ -47,8 +47,48 @@ public class Ship {
 	
 	public Ship(){}
 	
-
-
+	/**
+	 * Function Detect
+	 * Runs detection for given distances and ranges for all sensors.
+	 * @param distances
+	 * @param angles
+	 * @param count
+	 * @param ignore
+	 */
+	public void detect(double[] distances, double[] angles, int count, int ignore){
+		for(int i=0;i<this.sensors.size();i++){ //Iterate through all sensors.
+			if(this.sensors.get(i).detect(distances, angles, count, this.facing, ignore)==true){
+				// Set the Sensor flags if the sensor is triggered.
+				setActionFlags(this.sensors.get(i).getMode());
+			}			
+		}
+		//IF no flags are triggered, set default action.
+		if((this.fire==false)&&(this.fire==false)&&(this.fire==false)&&(this.fire==false)) setActionFlags(this.defaultAction);
+	}
+	
+	/**
+	 * Function setActionsFalse
+	 * Sets all actions on this ship to false.
+	 */
+	public void setActionsFalse(){
+		//Set ship sensor flags to false.
+		this.fire = false;
+		this.move = false;
+		this.left = false;
+		this.right = false;		
+	}
+	
+	/**
+	 * Sets the action flags based on the action integer.
+	 * @param action
+	 */
+	public void setActionFlags(int action){
+		if((action & Action.FIRE)==Action.FIRE) this.fire = true;
+		if((action & Action.MOVE)==Action.MOVE) this.move = true;
+		if((action & Action.LEFT)==Action.LEFT) this.left = true;
+		if((action & Action.RIGHT)==Action.RIGHT) this.right = true;
+	}
+	
 	public Point getLocation() {
 		return location;
 	}

@@ -14,6 +14,23 @@ public class Arc {
 		this.setRange(0);
 	}
 	
+	/**
+	 * Function inRange
+	 * Determines if a given distance/angle location is within the range of the sensor.
+	 * @param distance
+	 * @param angle
+	 * @return
+	 */
+	public boolean inRange(double distance, double angle ){
+		if(distance < this.range){
+			if((-(angle % 2) > (this.facing - this.width/2)) && ((angle % 2) < (this.facing + this.width/2))){ 
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	public double getWidth() {
 		return width;
 	}

@@ -18,6 +18,26 @@ public class Sensor {
 		this.active = active;
 	}
 	
+	/**
+	 * Detects whether one of the given coordinates triggers the sensor. Only returns true on active sensors.
+	 * @param distances
+	 * @param angles
+	 * @param count
+	 * @return True if triggered, False if not.
+	 */
+	public boolean detect(double[] distances, double[] angles, int count, double offset, int ignore){
+		this.triggered = false;
+		if(this.active = true){
+			for(int i=0;i<count;i++){//Iterate through all coordinates
+				if(i != ignore){ //Ignore current ship coordinate distance measure
+					if(this.arc.inRange(distances[i], (angles[i]+offset))==true) this.triggered = true;			
+				}
+			}
+		}
+		return this.triggered;
+	}
+	
+	
 	public int getMode() {
 		return mode;
 	}
