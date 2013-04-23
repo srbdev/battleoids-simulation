@@ -4,6 +4,7 @@ public class Sensor {
 	private int mode;
 	private Arc arc = new Arc();
 	private boolean active;
+	private boolean triggered = false;
 	
 	public Sensor(){
 		this.mode = 0;
@@ -35,5 +36,13 @@ public class Sensor {
 	}
 	public void setArc(Arc arc) {
 		this.arc = arc;
+	}
+
+	public boolean isTriggered() {
+		return triggered;
+	}
+
+	public void setTriggered(boolean triggered) {
+		this.triggered = triggered;
 	}	
 }

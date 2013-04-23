@@ -4,6 +4,7 @@ import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 
 
  /**
@@ -123,7 +124,7 @@ public class ShipViz extends Frame {
 		     
 		     //Loop through sensors and draw the arcs.
 		     //Draw the gun range Arc
-		     g.setColor(Color.red);
+		     g.setColor(Color.gray);
 		     int gRange = (int)(s.getGun().getRange()*maxRange);
 		     double gStartArc = ((s.getFacing() + s.getGun().getFacing()) + (s.getGun().getWidth()/2));
 		     double gEndArc = ((s.getFacing() + s.getGun().getFacing()) - (s.getGun().getWidth()/2));
@@ -194,17 +195,28 @@ public class ShipViz extends Frame {
 	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
 	     s.getSensors().add(sens4);							//add sensor to ship
 	     
-	     Ship s2 = new Ship(s, 100, 100, 0);
-	     Ship s2b = new Ship(s, 600, 600, 0);
-	     Ship s2c = new Ship(s, 100, 600, 0);
-	     Ship s2d = new Ship(s, 600, 100, 0);
+	     Ship s2 = new Ship(s, 100, 100, 0.25);
+	     Ship s2b = new Ship(s, 600, 600, 0.25);
+	     Ship s2c = new Ship(s, 100, 600, 0.25);
+	     Ship s2d = new Ship(s, 600, 100, 0.25);
 	     
+	     ArrayList<Ship> ships = new ArrayList<Ship>();
+	     
+	     ships.add(s);
+	     ships.add(s2);
+	     int[] sx = {100, 200};
+	     int[] sy = {100, 200};
+	     double[] sangle = {0, 1};
+	     
+	    Battlefield b = new Battlefield(ships, sx, sy, sangle, 2, 1, 500);
+	    //Battlefield b = new Battlefield();		
+	     b.run();
 	     //Draw Ship
 	     drawShip(g2d, s, "1", 500);     
 	     drawShip(g2d, s2, "2", 500);
-	     drawShip(g2d, s2b, "2", 500);
-	     drawShip(g2d, s2c, "2", 500);
-	     drawShip(g2d, s2d, "2", 500);
+	     //drawShip(g2d, s2b, "2", 500);
+	     //drawShip(g2d, s2c, "2", 500);
+	     //drawShip(g2d, s2d, "2", 500);
 	     
 	     
 	     

@@ -7,10 +7,15 @@ public class Ship {
 	private Point location = new Point(0,0);
 	private int velocity=0, defaultAction=0;
 	private double vector=0, facing=0;
-	private Arc gun = new Arc(0, 0.01, 1);
+	private Arc gun = new Arc(0, 0.5, 1);
+	//private boolean firing = false;
+	private boolean hit = false;
 	private Score score = new Score();
 	private ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-	
+	private boolean move = false;
+	private boolean right = false;
+	private boolean left = false;
+	private boolean fire = false;
 	public Ship(Ship s, int x, int y, double facing){
 		this.sensors = s.getSensors();
 		this.defaultAction = s.getDefaultAction();
@@ -92,6 +97,46 @@ public class Ship {
 	}
 	public void setDefaultAction(int defaultAction) {
 		this.defaultAction = defaultAction;
+	}
+
+	public boolean isHit() {
+		return hit;
+	}
+
+	public void setHit(boolean hit) {
+		this.hit = hit;
+	}
+
+	public boolean isMoving() {
+		return move;
+	}
+
+	public void setMoving(boolean move) {
+		this.move = move;
+	}
+
+	public boolean isTurningRight() {
+		return right;
+	}
+
+	public void setTurningRight(boolean right) {
+		this.right = right;
+	}
+
+	public boolean isTurningLeft() {
+		return left;
+	}
+
+	public void setTurningLeft(boolean left) {
+		this.left = left;
+	}
+
+	public boolean isFiring() {
+		return fire;
+	}
+
+	public void setFiring(boolean fire) {
+		this.fire = fire;
 	}
 
 
