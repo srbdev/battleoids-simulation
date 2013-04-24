@@ -32,11 +32,16 @@ public class BattlefieldViz extends Thread {
     private Graphics2D backgroundGraphics;
     private Graphics2D graphics;
     private JFrame frame;
+    private int steps = 100;
+    private int currentsteps = 0;
     private int width = 500;
     private int height = 500;
-    private int scale = 1;
-  //Define Ship
+    private double scale = 1;
+    //Define Ship
     Ship ship = new Ship();								//new ship
+    Ship ship2 = new Ship();
+    //Battlefield
+    Battlefield b = new Battlefield();
     
     private GraphicsConfiguration config =
     		GraphicsEnvironment.getLocalGraphicsEnvironment()
@@ -56,39 +61,52 @@ public class BattlefieldViz extends Thread {
     	frame = new JFrame();
     	frame.addWindowListener(new FrameClose());
     	frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    	frame.setSize(width * scale, height * scale);
+    	frame.setSize((int)(width * scale), (int)(height * scale));
     	frame.setVisible(true);
 
     	// Canvas
     	canvas = new Canvas(config);
-    	canvas.setSize(width * scale, height * scale);
+    	canvas.setSize((int)(width * scale), (int)(height * scale));
     	frame.add(canvas, 0);
 
-    	//Ship
-    	ship.setFacing(0.5);									//Set ship Facing.
-        ship.setLocation(new Point(250,250));
-        Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
-	     Sensor sens = new Sensor(2, marc, true);			//sensor defined
-	     ship.getSensors().add(sens);							//add sensor to ship
-	     
-	     Arc marc2 = new Arc(.5, 1.0, .75);					//sensor arc defined
-	     Sensor sens2 = new Sensor(4, marc2, true);			//sensor defined
-	     ship.getSensors().add(sens2);							//add sensor to ship
-	     
-	     Arc marc3 = new Arc(1.5, 1.0, .75);					//sensor arc defined
-	     Sensor sens3 = new Sensor(8, marc3, true);			//sensor defined
-	     ship.getSensors().add(sens3);							//add sensor to ship
-	     
-	     Arc marc4 = new Arc(0, .5, .875);					//sensor arc defined
-	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
-	     ship.getSensors().add(sens4);							//add sensor to ship
-        
     	// Background & Buffer
     	background = create(width, height, false);
     	canvas.createBufferStrategy(2);
     	do {
     		strategy = canvas.getBufferStrategy();
     	} while (strategy == null);
+    	
+    	
+    	//Ship
+    	ship.setFacing(0.5);									//Set ship Facing.
+        ship.setLocation(new Point(250,250));
+        ship2.setFacing(1.5);
+        ship2.setLocation(new Point(300, 200));
+        Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
+	     Sensor sens = new Sensor(2, marc, true);			//sensor defined
+	     sens.setActive(true);
+	     ship.getSensors().add(sens);							//add sensor to ship
+	     
+	     Arc marc2 = new Arc(.5, 1.0, .75);					//sensor arc defined
+	     Sensor sens2 = new Sensor(4, marc2, true);			//sensor defined
+	     sens2.setActive(true);
+	     ship.getSensors().add(sens2);							//add sensor to ship
+	     
+	     Arc marc3 = new Arc(1.5, 1.0, .75);					//sensor arc defined
+	     Sensor sens3 = new Sensor(8, marc3, true);			//sensor defined
+	     sens3.setActive(true);
+	     ship.getSensors().add(sens3);							//add sensor to ship
+	     
+	     Arc marc4 = new Arc(0, .5, .875);					//sensor arc defined
+	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
+	     sens4.setActive(true);
+	     ship.getSensors().add(sens4);							//add sensor to ship
+        //Battlefield
+	     this.b.getShips().add(ship);
+	     this.b.getShips().add(ship2);
+	     
+	    b.setCount(2);
+	     
     	start();
     }
 
@@ -144,8 +162,7 @@ public class BattlefieldViz extends Thread {
     			renderGame(backgroundGraphics); // this calls your draw method
     			// thingy
     			if (scale != 1) {
-    				bg.drawImage(background, 0, 0, width * scale, height
-    						* scale, 0, 0, width, height, null);
+    				bg.drawImage(background, 0, 0, (int)(width * scale), (int)(height * scale), 0, 0, width, height, null);
     			} else {
     				bg.drawImage(background, 0, 0, null);
     			}
@@ -168,7 +185,11 @@ public class BattlefieldViz extends Thread {
 
     public void updateGame() {
     	// update game logic here
-    	this.ship.setFacing((this.ship.getFacing()+0.01)%2);
+    	if(currentsteps < steps){
+    		b.run();
+    		//this.ship.setFacing((this.ship.getFacing()+0.01)%2);
+    		currentsteps++;
+    	}
     }
     /**
 	 * Draws a pie shaped outline.
@@ -292,6 +313,7 @@ public class BattlefieldViz extends Thread {
     	g.setColor(Color.BLACK);
     	g.fillRect(0, 0, width, height);
     	drawShip(g, this.ship, "1", 500);
+    	drawShip(g, this.ship2, "2", 500);
 	     
     }
 

@@ -17,7 +17,7 @@ public class Battlefield {
 	private int mode=0;
 	private int maxRange = 100;
 	private double rotate = 0.01;
-	private int distance = 5;
+	private int distance = 2;
 	private boolean threaded=false; //Threading, if we get to that.
 	private double shotDepletionRate, hitDepletionRate, hitRegenerationRate;
 	private ArrayList<ArrayList<Score>> scores = new ArrayList<ArrayList<Score>>();
@@ -80,25 +80,37 @@ public class Battlefield {
 	public double[] getMinAngleDistance(Point a, Point b){
 		double[] retVal = new double[2];
 		int x=0, y=0, dx, dy;
-		double distance;
+		double distance, angle;
 		retVal[0] = this.size*2;
+		//System.out.println(a.x + ", " + a.y + " " + b.x + ", " + b.y);
+		//dx = b.x - a.x;
+		//dy = a.y - b.y;
 		//Iterate through quadrants for simulation wrap-around. All nine quadrants
 		//need to be checked for shortest distance.
 		for(int i=0;i<3;i++){
-			if(i==0) x = b.x-this.size;
-			if(i==1) x = b.x;
-			if(i==2) x = b.x+this.size;
+			int tdx=0, tdy=0;
+			if(i==0) tdy = b.y-this.size;
+			if(i==1) tdy = b.y;
+			if(i==2) tdy = b.y+this.size;
 			for(int j=0;j<3;j++){
-				if(j==0) y = b.y-this.size;
-				if(j==1) y = b.y;
-				if(j==2) y = b.y+this.size;
+				if(j==0) tdx = b.x-this.size;
+				if(j==1) tdx = b.x;
+				if(j==2) tdx = b.x+this.size;
+				dx = tdx - a.x;
+				dy = a.y - tdy;
+				distance = Math.hypot(dx,  dy);
+				angle = Math.atan2(dy, dx)/Math.PI;
+				//System.out.println(dx + ":" + dy + " " + distance + " " + angle);
+				//		System.out.println((tdx-a.x)+" "+(a.y - tdy));
+				
 				//Calculate delta distance
-				dx = x - a.x;
-				dy = y - a.y;
-				distance = Math.sqrt(dx^2+dy^2);
+				//dx = a.x - x;
+				//dy = a.y - y;
+				//distance = Math.sqrt(dx^2+dy^2);
+				//System.out.println(distance);
 				if(distance < retVal[0]){
 					retVal[0]=distance;
-					retVal[1]=Math.atan2(dy, dx)/Math.PI;
+					retVal[1]=angle;
 				}
 			}
 		}
@@ -134,7 +146,7 @@ public class Battlefield {
 				//Create random X, Y, and facing for ship.
 			}
 			//For each ship output identifier to the console.
-			System.out.println(i + " - X: " + this.ships.get(i).getLocation().x + " Y: " + this.ships.get(i).getLocation().y + " A: " + this.ships.get(i).getFacing() );
+			System.out.println((i+1) + " - X: " + this.ships.get(i).getLocation().x + " Y: " + this.ships.get(i).getLocation().y + " A: " + this.ships.get(i).getFacing() );
 				
 		}
 		//Begin Program Run
@@ -155,25 +167,54 @@ public class Battlefield {
 				//Begin ship-to-ship comparisons.
 				for(int j=0;j<this.count;j++){	//For each other ship
 					if((i!=j)&&(distances[i][j]==0)){	//Where the ship is not the same as current ship and value not already set.
+						//System.out.println(i + " to " + j);
 						temp = getMinAngleDistance(this.ships.get(i).getLocation(), this.ships.get(j).getLocation());
-						System.out.println(i + " to " + j + " : Distance: " + temp[0] + " Angle: " + temp[1]);
 						distances[i][j] = temp[0];
 						angles[i][j] = temp[1];
 						distances[j][i] = temp[0];
 						angles[j][i] = (1 + temp[1]) % 2;
+						System.out.println((i+1) + " to " + (j+1) + " : Distance: " + temp[0] + " Angle: " + temp[1] + ", " + angles[j][i]);
+						
 					}
 				}
 				//Perform checks for each sensor. Set sensor flags within ships.	
 				//This is as good a place to perform checks as any.
-				this.ships.get(i).detect(distances[i], angles[i], this.ships.size(), i);
+				this.ships.get(i).detect(distances[i], angles[i], this.ships.size(), i, this.maxRange);
+				System.out.print("Ship " + (i+1) + ": ");
+				if(this.ships.get(i).isMoving()) System.out.print("M"); 		else System.out.print("-");
+				if(this.ships.get(i).isFiring()) System.out.print("F"); 		else System.out.print("-");
+				if(this.ships.get(i).isTurningLeft()) System.out.print("L");	else System.out.print("-");
+				if(this.ships.get(i).isTurningRight()) System.out.print("R"); 	else System.out.print("-");
+				System.out.println("");
+				
 				//todo: If firing is triggered, get firing solution on any ships.
 				
 				//todo: Calculate if any ships are hit.
 				
 			}
 			//todo: set new ship locations and facings based on sensor flags.
-
-			
+			for(int i=0;i<this.count;i++){
+				double theta = this.ships.get(i).getFacing();
+				System.out.print("Ship "+(i+1)+" "+theta+" : ");
+				if(this.ships.get(i).isTurningLeft()){
+					this.ships.get(i).setFacing(theta+this.rotate);
+				}
+				if(this.ships.get(i).isTurningRight()){
+					this.ships.get(i).setFacing(theta-this.rotate);
+				}
+				theta = this.ships.get(i).getFacing();	//Update theta angle for new direction.
+				if(this.ships.get(i).isMoving()){
+					int x = (int)(this.distance*Math.cos(theta*Math.PI));
+					int y = (int)(this.distance*Math.sin(theta*Math.PI));
+					System.out.print("("+x+","+y+") : ");
+					Point p = this.ships.get(i).getLocation();
+					p.x = (p.x + x) % this.size;
+					p.y = (p.y - y) % this.size;
+					this.ships.get(i).setLocation(p);
+				}
+				System.out.print(this.ships.get(i).getFacing());
+				System.out.println("");
+			}			
 		}
 		//Store Scores as new Score objects in scores Array
 		

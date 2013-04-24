@@ -25,15 +25,19 @@ public class Sensor {
 	 * @param count
 	 * @return True if triggered, False if not.
 	 */
-	public boolean detect(double[] distances, double[] angles, int count, double offset, int ignore){
+	public boolean detect(double[] distances, double[] angles, int count, double offset, int ignore, int maxRange){
+		//System.out.print("Sensor ");
 		this.triggered = false;
 		if(this.active = true){
+			//System.out.print("Active ");
 			for(int i=0;i<count;i++){//Iterate through all coordinates
 				if(i != ignore){ //Ignore current ship coordinate distance measure
-					if(this.arc.inRange(distances[i], (angles[i]+offset))==true) this.triggered = true;			
+					//System.out.print("Ship "+i+" ");
+					if(this.arc.inRange(distances[i], (angles[i]-offset), maxRange)==true) this.triggered = true;			
 				}
 			}
 		}
+		//System.out.println(this.triggered);
 		return this.triggered;
 	}
 	

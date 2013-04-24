@@ -55,9 +55,10 @@ public class Ship {
 	 * @param count
 	 * @param ignore
 	 */
-	public void detect(double[] distances, double[] angles, int count, int ignore){
+	public void detect(double[] distances, double[] angles, int count, int ignore, int maxRange){
+		//System.out.println("Detect within ship sensors.");
 		for(int i=0;i<this.sensors.size();i++){ //Iterate through all sensors.
-			if(this.sensors.get(i).detect(distances, angles, count, this.facing, ignore)==true){
+			if(this.sensors.get(i).detect(distances, angles, count, this.facing, ignore, maxRange)==true){
 				// Set the Sensor flags if the sensor is triggered.
 				setActionFlags(this.sensors.get(i).getMode());
 			}			
