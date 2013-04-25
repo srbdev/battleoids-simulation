@@ -32,7 +32,7 @@ public class BattlefieldViz extends Thread {
     private Graphics2D backgroundGraphics;
     private Graphics2D graphics;
     private JFrame frame;
-    private int steps = 100;
+    private int steps = 1;
     private int currentsteps = 0;
     private int width = 500;
     private int height = 500;
@@ -80,7 +80,20 @@ public class BattlefieldViz extends Thread {
     	//Ship
     	ship.setFacing(0.5);									//Set ship Facing.
         ship.setLocation(new Point(250,250));
+        ship.setDefaultAction(Action.MOVE);
+       /* Score sc = ship.getScore();
+        sc.energy = 0;
+        ship.setScore(sc);
+        System.out.println(ship.getScore().energy);*/
+        
+        Arc marcS = new Arc(0, .25, 1.0);					//sensor arc defined
+	     Sensor sensS = new Sensor(2, marcS, true);			//sensor defined
+	     sensS.setActive(true);
+	     ship2.getSensors().add(sensS);							//add sensor to ship
+	     
+        
         ship2.setFacing(1.5);
+        ship2.setDefaultAction(Action.RIGHT);
         ship2.setLocation(new Point(300, 200));
         Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
 	     Sensor sens = new Sensor(2, marc, true);			//sensor defined
@@ -266,58 +279,70 @@ public class BattlefieldViz extends Thread {
 	 * @param g
 	 * @param s
 	 */
-	public void drawShip(Graphics2D g, Ship s, String label, int boardSize){
+	public void drawShip(Graphics2D g, Ship s, String label, int boardSize, int maxRange){
 
 	     //Board Declaration
 	     int size = boardSize/2;
-	     int maxRange = size - 50;
+	     //int maxRange = size - 50;
 	     int shipSize = boardSize/50;
 	     
-	     //Loop through sensors and draw the arcs.
-	     //Draw the gun range Arc
-	     g.setColor(Color.gray);
-	     int gRange = (int)(s.getGun().getRange()*maxRange);
-	     double gStartArc = ((s.getFacing() + s.getGun().getFacing()) + (s.getGun().getWidth()/2));
-	     double gEndArc = ((s.getFacing() + s.getGun().getFacing()) - (s.getGun().getWidth()/2));
-	     drawPie(g, s.getLocation().x, s.getLocation().y, gRange, gStartArc, gEndArc);
 	     
-	     //Draw Sensor Arcs
-	     for(int scount = 0; scount < s.getSensors().size(); scount++){
-		     g.setColor(Color.blue);
-		     Sensor cs = s.getSensors().get(scount);
-		     if(cs.isActive()){
-		    	 //Set sensor color here. Will take care of this later.
-		    	 //TODO 
-		
-		    	 int test = s.getSensors().get(scount).getMode();
-			     if((test & Action.MOVE)==Action.MOVE)  g.setColor(Color.blue);
-			     if((test & Action.FIRE)==Action.FIRE)  g.setColor(Color.green);
-			     if((test & Action.LEFT)==Action.LEFT)  g.setColor(Color.yellow);
-			     if((test & Action.RIGHT)==Action.RIGHT)  g.setColor(Color.orange);
-			    
-		    	// g.setColor(Color.blue);
-		    	 
-		    	 //draw sensor arc
-		    	 int arcRange = (int)(cs.getArc().getRange()*maxRange);
-			     double startArc = ((s.getFacing() + cs.getArc().getFacing()) + (cs.getArc().getWidth()/2));
-			     double endArc = ((s.getFacing() + cs.getArc().getFacing()) - (cs.getArc().getWidth()/2));
-			     drawPie(g, s.getLocation().x, s.getLocation().y, arcRange, startArc, endArc);
+	     if(s.getScore().energy>0){ //Enable arc drawing if ship is alive.
+		     //Loop through sensors and draw the arcs.
+		     //Draw the gun range Arc
+		     if(s.isFiring()) g.setColor(Color.red); else g.setColor(Color.gray);
+		     int gRange = (int)(s.getGun().getRange()*maxRange);
+		     double gStartArc = ((s.getFacing() + s.getGun().getFacing()) + (s.getGun().getWidth()/2));
+		     double gEndArc = ((s.getFacing() + s.getGun().getFacing()) - (s.getGun().getWidth()/2));
+		     drawPie(g, s.getLocation().x, s.getLocation().y, gRange, gStartArc, gEndArc);
+		     
+		     //Draw Sensor Arcs
+	         for(int scount = 0; scount < s.getSensors().size(); scount++){
+			     g.setColor(Color.blue);
+			     Sensor cs = s.getSensors().get(scount);
+			     if(cs.isActive()){
+			    	 //Set sensor color here. Will take care of this later.
+			    	 //TODO 
+			
+			    	 int test = s.getSensors().get(scount).getMode();
+				     if((test & Action.MOVE)==Action.MOVE){
+				    	 if(s.getSensors().get(scount).isTriggered()) g.setColor(Color.red); else g.setColor(Color.blue);
+				     }
+				     if((test & Action.FIRE)==Action.FIRE){
+				    	 if(s.getSensors().get(scount).isTriggered()) g.setColor(Color.red); else g.setColor(Color.green);
+				     }
+				     if((test & Action.LEFT)==Action.LEFT){
+				    	 if(s.getSensors().get(scount).isTriggered()) g.setColor(Color.red); else g.setColor(Color.yellow);
+				     }
+				     if((test & Action.RIGHT)==Action.RIGHT){
+				    	 if(s.getSensors().get(scount).isTriggered()) g.setColor(Color.red); else g.setColor(Color.orange);
+				     }
+				    
+			    	// g.setColor(Color.blue);
+			    	 
+			    	 //draw sensor arc
+			    	 int arcRange = (int)(cs.getArc().getRange()*maxRange);
+				     double startArc = ((s.getFacing() + cs.getArc().getFacing()) + (cs.getArc().getWidth()/2));
+				     double endArc = ((s.getFacing() + cs.getArc().getFacing()) - (cs.getArc().getWidth()/2));
+				     drawPie(g, s.getLocation().x, s.getLocation().y, arcRange, startArc, endArc);
+			     }
 		     }
 	     }
 	     //Render the Ship
-	     g.setColor(Color.white); //setting context
+	     if(s.getScore().energy>0) g.setColor(Color.white); else g.setColor(Color.gray); //setting context
+	     if(s.isHit()) g.setColor(Color.red);
 	     drawShipBody(g, s.getLocation().x, s.getLocation().y, shipSize, s.getFacing(), label);
 	}
 
     public void renderGame(Graphics2D g) {
     	g.setColor(Color.BLACK);
     	g.fillRect(0, 0, width, height);
-    	drawShip(g, this.ship, "1", 500);
-    	drawShip(g, this.ship2, "2", 500);
+    	drawShip(g, this.ship, "1", b.getSize(), b.getMaxRange());
+    	drawShip(g, this.ship2, "2", b.getSize(), b.getMaxRange());
 	     
     }
 
     public static void main(final String args[]) {
-    	new Test();
+    	new BattlefieldViz();
     }
 }
