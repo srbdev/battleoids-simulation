@@ -13,7 +13,7 @@ public class Battlefield {
 	public final int SEEDED = 1;
 	private ArrayList<Ship> ships = new ArrayList<Ship>();
 	private Score[] startingScores;
-	private int randomSeed, runs=5, size=500;
+	private int randomSeed, runs=1, size=500;
 	private double startX[], startY[], startA[];
 	private int count;
 	private int steps = 1000;
@@ -228,6 +228,13 @@ public class Battlefield {
 				//Randomize the starting locations.
 				if(this.mode==1){
 					//todo: Create random X, Y, and facing for ship.
+					int nx = (int)(Math.random()*this.size);
+					int ny = (int)(Math.random()*this.size);
+					
+					this.ships.get(i).x = nx;
+					this.ships.get(i).y = ny;
+					this.ships.get(i).setLocation(nx, ny);
+					this.ships.get(i).setFacing(Math.random()*2);
 					
 				}else{
 					//todo: grab starting locations if this is first run and they weren't set.
