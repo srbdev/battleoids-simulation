@@ -46,7 +46,12 @@ public class FleetRunner {
 		Ship avoidance = ShipType.newInstance(36800, 1);
 		ships.add(avoidance);
 		
-
+		
+		/* ship - previous winner
+		 * Ship type 127
+		 */
+		Ship prev = ShipType.newInstance(127, 1);
+		ships.add(prev);
 		
 		/* random ship
 		 * random default
@@ -77,8 +82,8 @@ public class FleetRunner {
 			ships = EvolveShip.evolve(ships, matrix);
 		}
 		
-		
-		EvolveShip.closeWriter();
+		EvolveShip.printBest(ships.get(0));
+		EvolveShip.closeWriters();
 
 	}
 

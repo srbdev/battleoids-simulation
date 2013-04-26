@@ -24,10 +24,47 @@ public class EvolveShip {
     private static BufferedWriter bw;
     
     
+    private static File best_file;
+    private static FileWriter best_fw;
+    private static BufferedWriter best_bw;
+    
+    
 	private EvolveShip(){
 		
 	}
 	
+	
+	
+	public static void printBest(Ship s){
+		
+		try {
+			
+			best_fw = new FileWriter("C:\\Users\\mantogn\\Desktop\\cs523\\final project\\best.csv", true);
+			best_bw = new BufferedWriter(best_fw);
+			
+			best_bw.write("type, " + ShipType.getShipTypeNumber(s) + "\n");
+			best_bw.write(",,default," + s.getDefaultAction() + "\n");
+			
+			for(Sensor sen : s.getSensors()){
+				if(sen.isActive()){
+					best_bw.write(",,mode," + sen.getMode() + "\n");
+					best_bw.write(",,facing," + sen.getArc().getFacing() + "\n");
+					best_bw.write(",,range," + sen.getArc().getRange() + "\n");
+					best_bw.write(",,width," + sen.getArc().getWidth() + "\n");
+				}
+			}
+			
+			best_bw.write("\n");
+			
+			best_bw.flush();
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public static void createFileHeaders(String fileName){
 		
@@ -55,9 +92,12 @@ public class EvolveShip {
 		
 	}
 	
-	public static void closeWriter(){
+	public static void closeWriters(){
 		try {
+			
 			bw.close();
+			best_bw.close();
+			
 		} catch (IOException e) {
 			
 			e.printStackTrace();
