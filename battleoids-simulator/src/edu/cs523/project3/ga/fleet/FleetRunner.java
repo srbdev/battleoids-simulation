@@ -11,19 +11,21 @@ public class FleetRunner {
 
 	
 	private static int generations = 100;
-	
+	private static final int BATTLEFIELD_SIZE = 2000;
 	
 	public static void main(String[] args) {
 		
 		/*** initialization of ships ***/
 		ArrayList<Ship> ships = new ArrayList <Ship>();
-		
+		Random r = new Random();
 		
 		
 		/* ship type 1
 		 * default action move
 		 */
 		Ship aggressive1 = ShipType.newInstance(15, 1);
+		aggressive1.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		aggressive1.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(aggressive1);
 		
 		
@@ -31,12 +33,16 @@ public class FleetRunner {
 		 * default action turn left
 		 */
 		Ship aggressive2 = ShipType.newInstance(50, 8);
+		aggressive2.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		aggressive2.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(aggressive2);
 		
 		/* ship type 3
 		 * no default action
 		 */
 		Ship passive = ShipType.newInstance(28673, 0);
+		passive.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		passive.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(passive);
 		
 		/* ship type 4
@@ -44,6 +50,8 @@ public class FleetRunner {
 		 * no default move
 		 */
 		Ship avoidance = ShipType.newInstance(36800, 1);
+		avoidance.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		avoidance.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(avoidance);
 		
 		
@@ -51,13 +59,24 @@ public class FleetRunner {
 		 * Ship type 127
 		 */
 		Ship prev = ShipType.newInstance(127, 1);
+		prev.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		prev.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(prev);
+		
+		/* ship - previous winner
+		 * Ship type 1
+		 */
+		Ship prev1 = ShipType.newInstance(1, 1);
+		prev1.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		prev1.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		ships.add(prev1);
 		
 		/* random ship
 		 * random default
 		 */
-		Random r = new Random();
 		Ship random = ShipType.newInstance(r.nextInt(65535), r.nextInt(16));
+		random.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		random.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(random);
 		
 		
@@ -67,13 +86,13 @@ public class FleetRunner {
 		Battlefield bf;
 		ArrayList<ArrayList<Score>> matrix;
 		
-		EvolveShip.createFileHeaders("test");
+		EvolveShip.createFileHeaders(args[0]);
 		
 		
 		/* evolve ship */
 		for(int i = 0; i < generations; i++){
 			
-			bf = new Battlefield(ships, 1, 1000, Battlefield.RANDOM);
+			bf = new Battlefield(ships, 1, 1000, Battlefield.SEEDED);
 			
 			matrix = bf.run();
 			

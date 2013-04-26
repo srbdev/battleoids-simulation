@@ -147,8 +147,10 @@ public class EvolveShip {
 		
 		int numberOfShips = ships.size();
 		int [] shipScore = new  int [numberOfShips];
-		int indexOfFittestShip = 0;
-		int highestScore = 0;
+		int indexOfFittestShip = -1;
+		int indexOfNextFittestShip = -1;
+		int highestScore = -100;
+		int nextHighestScore = -100;
 		
 		ArrayList <Ship> newFleet = new ArrayList <Ship> (); 
 		
@@ -189,10 +191,19 @@ public class EvolveShip {
 		
 		/* find fittest ship */
 		for(int i = 0; i < shipScore.length; i++){
+			
+			
+			
 			if(shipScore[i] > highestScore){
 				highestScore = shipScore[i];
 				indexOfFittestShip = i;
+				indexOfNextFittestShip = indexOfFittestShip;
+			}else if(shipScore[i] <= highestScore && shipScore[i] > nextHighestScore){
+				nextHighestScore = shipScore[i];
+				indexOfNextFittestShip = i;
 			}
+			
+			
 		}
 		
 		/* elitism : add to list */
@@ -210,11 +221,13 @@ public class EvolveShip {
 		}
 		newFleet.add(newShip);
 		
+		newFleet.add(ships.get(indexOfNextFittestShip));
+		
 		/* 3 parent crossover - randomly select 3 parents */
 		/* crossover at 1 points between 0 and 15 sensors */
 		/* mutate child */
 		/* redo population - 2 times */
-		for(int i = 2; i < numberOfShips; i++){
+		for(int i = 3; i < numberOfShips; i++){
 			
 			int indexParent1 = r.nextInt(numberOfShips);
 			int indexParent2 = r.nextInt(numberOfShips);
