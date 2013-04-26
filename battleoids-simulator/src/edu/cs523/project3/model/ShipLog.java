@@ -9,13 +9,14 @@ import java.io.Serializable;
  */
 public class ShipLog implements Serializable{
 	private static final long serialVersionUID = 2970105520627637406L;
-	public int x;
-	public int y;
-	public double facing;
+	public int x=0;
+	public int y=0;
+	public double facing=0;
 	public boolean firing=false;
 	public boolean hit=false;
 	public int sensors=0;
-	public Score score;
+	public Score score=new Score();
+	public boolean set=false;
 	
 	/**
 	 * Function ShipLog
@@ -28,11 +29,19 @@ public class ShipLog implements Serializable{
 		this.facing = s.getFacing();
 		this.firing = s.isFiring();
 		this.hit = s.isHit();
-		this.score = s.getScore();
+		Score sc = s.getScore();
+		this.set = true;
+		this.score = new Score(sc.energy, sc.hits, sc.misses, sc.time, sc.ship, sc.count);
 		for(int i=0;i<s.getSensors().size();i++){
 			if(s.getSensors().get(i).isTriggered()){
 				this.sensors = this.sensors | (1<<i);
 			}
 		}		
+	}
+	/**
+	 * Empty constructor.
+	 */
+	public ShipLog(){
+		
 	}
 }
