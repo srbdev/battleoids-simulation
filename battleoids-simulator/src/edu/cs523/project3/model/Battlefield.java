@@ -309,7 +309,7 @@ public class Battlefield {
 			scores.add(scList);
 		}
 		dumpScores();
-		dumpLog();
+		//dumpLog();
 		return scores;  //Return all scores.
 	}
 	
