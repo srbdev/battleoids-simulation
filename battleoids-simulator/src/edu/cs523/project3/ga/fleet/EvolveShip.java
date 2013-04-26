@@ -196,8 +196,8 @@ public class EvolveShip {
 			
 			if(shipScore[i] > highestScore){
 				highestScore = shipScore[i];
-				indexOfFittestShip = i;
 				indexOfNextFittestShip = indexOfFittestShip;
+				indexOfFittestShip = i;
 			}else if(shipScore[i] <= highestScore && shipScore[i] > nextHighestScore){
 				nextHighestScore = shipScore[i];
 				indexOfNextFittestShip = i;
@@ -206,8 +206,9 @@ public class EvolveShip {
 			
 		}
 		
+		
 		/* elitism : add to list */
-		newFleet.add(0, ships.get(indexOfFittestShip));
+		newFleet.add(ships.get(indexOfFittestShip));
 		
 		
 		/* mutated elite: add to list */
@@ -243,9 +244,9 @@ public class EvolveShip {
 			
 			
 			
-			Ship child = new Ship();
-			ArrayList <Sensor> sensors = new ArrayList <Sensor> ();
 			
+			ArrayList <Sensor> sensors = new ArrayList <Sensor> ();
+			Ship child = new Ship();
 			
 			/* get parent 1 sensors */
 			for(int j = 0; j < point1; j++){
@@ -308,7 +309,7 @@ public class EvolveShip {
 			if(!child.getSensors().get(0).isActive() && !child.getSensors().get(12).isActive())
 				child.getSensors().get(0).setActive(true);
 			
-			
+			child.setDefaultAction(r.nextInt(16));
 			newFleet.add(child);
 		}
 		

@@ -54,22 +54,31 @@ public class FleetRunner {
 		avoidance.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(avoidance);
 		
-		
 		/* ship - previous winner
-		 * Ship type 127
+		 * Ship type 51
 		 */
-		Ship prev = ShipType.newInstance(127, 1);
-		prev.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
-		prev.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
-		ships.add(prev);
-		
-		/* ship - previous winner
-		 * Ship type 1
-		 */
-		Ship prev1 = ShipType.newInstance(1, 1);
+		Ship prev1 = ShipType.newInstance(51, 1);
 		prev1.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		prev1.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
 		ships.add(prev1);
+		
+		/* ship - previous winner
+		 * Ship type 59
+		 */
+		Ship prev2 = ShipType.newInstance(59, 13);
+		prev2.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		prev2.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		ships.add(prev2);
+		
+		
+		/* ship - previous winner
+		 * Ship type 575
+		 */
+		Ship prev5 = ShipType.newInstance(2063, 7);
+		prev5.x = r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		prev5.y =  r.nextDouble() * BATTLEFIELD_SIZE * 100;
+		ships.add(prev5);
+		
 		
 		/* random ship
 		 * random default
