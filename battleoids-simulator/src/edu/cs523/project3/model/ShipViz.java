@@ -221,4 +221,4 @@ public class ShipViz extends Frame {
 	     
 	     
 	   }
-	}  
+}

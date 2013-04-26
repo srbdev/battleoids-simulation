@@ -196,6 +196,4 @@ public class Ship {
 	public void setFiring(boolean fire) {
 		this.fire = fire;
 	}
-
-
 }
