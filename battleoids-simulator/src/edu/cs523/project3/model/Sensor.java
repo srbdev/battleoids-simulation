@@ -28,7 +28,7 @@ public class Sensor {
 	public boolean detect(double[] distances, double[] angles, boolean[] active, int count, double offset, int ignore, int maxRange){
 		//System.out.print("Sensor ");
 		this.triggered = false;
-		if(this.active = true){
+		if(this.active == true){
 			//System.out.print("Active ");
 			for(int i=0;i<count;i++){//Iterate through all coordinates
 				if(i != ignore){ //Ignore current ship coordinate distance measure
