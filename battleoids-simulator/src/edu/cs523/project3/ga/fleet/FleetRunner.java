@@ -10,7 +10,7 @@ import edu.cs523.project3.model.Ship;
 public class FleetRunner {
 
 	
-	private static int generations = 100;
+	private static int generations = 1;
 	
 	
 	public static void main(String[] args) {
@@ -52,12 +52,12 @@ public class FleetRunner {
 		 * random default
 		 */
 		Random r = new Random();
-		Ship random = ShipType.newInstance(r.nextInt(65536), r.nextInt(16));
+		Ship random = ShipType.newInstance(r.nextInt(65535), r.nextInt(16));
 		ships.add(random);
 		
 		
 		/**
-		 * not sure what number of runs, size, and position refer to...
+		 * ships, runs, size, and position
 		 */
 		Battlefield bf;
 		ArrayList<ArrayList<Score>> matrix;
@@ -65,7 +65,8 @@ public class FleetRunner {
 		/* evolve ship */
 		for(int i = 0; i < generations; i++){
 			
-			bf = new Battlefield(ships, 1, 20, 1);
+			bf = new Battlefield(ships, 1, 1000, Battlefield.RANDOM);
+			
 			matrix = bf.run();
 			
 			/***** todo: generate statistics *******/

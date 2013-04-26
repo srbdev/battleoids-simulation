@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * The Battlefield Class handles the simulation of the entire battlefield.
  */
 public class Battlefield {
-	public final int RANDOM = 0, SEEDED = 1;
+	public static final int RANDOM = 0, SEEDED = 1;
 	private int randomSeed, runs=1, size=500, count, steps = 1000, mode=-1, maxRange = 100;
 	private double startX[], startY[], startA[], rotate = 0.02, distance = 4,shotDepletionRate=0.0, hitDepletionRate=0.01, hitRegenerationRate=0.01;;
 	private boolean threaded=false; //Threading, if we get to that.
@@ -45,9 +45,9 @@ public class Battlefield {
 	 * @param positioning
 	 */
 	public Battlefield(ArrayList<Ship> ships, int runs, int size, int positioning){
-		double[] xs = new double[this.count];
-		double[] ys = new double[this.count];
-		double[] as = new double[this.count];
+		double[] xs = new double[ships.size()];
+		double[] ys = new double[ships.size()];
+		double[] as = new double[ships.size()];
 		for(int i=0;i<ships.size();i++){
 			xs[i] = ships.get(i).x;
 			ys[i] = ships.get(i).y;
