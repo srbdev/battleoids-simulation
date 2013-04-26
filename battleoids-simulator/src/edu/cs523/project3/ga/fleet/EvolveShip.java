@@ -3,6 +3,11 @@ package edu.cs523.project3.ga.fleet;
 import java.util.ArrayList;
 import java.util.Random;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import edu.cs523.project3.model.Arc;
 import edu.cs523.project3.model.Score;
 import edu.cs523.project3.model.Sensor;
@@ -14,9 +19,49 @@ public class EvolveShip {
 	private static final double fractionOfValue = .1;
     private static final int numOfSensorsToSwitch = 2;
     private static final Random r = new Random();
+    private static File file;
+    private static FileWriter fw;
+    private static BufferedWriter bw;
+    
     
 	private EvolveShip(){
 		
+	}
+	
+	
+	public static void createFileHeaders(String fileName){
+		
+		//create file
+		file = new File("C:\\Users\\mantogn\\Desktop\\cs523\\final project\\" + fileName + ".csv");
+		
+		try {
+			 fw = new FileWriter(file.getAbsoluteFile());
+			 bw = new BufferedWriter(fw);
+			 
+			 
+			 /* write headers */
+				bw.write("ship type,");
+				bw.write("ship energy,");
+				bw.write("ship hits,");
+				bw.write("ship misses,");
+				bw.write("ship time,");
+				bw.write("\n");
+			    bw.flush();
+			    
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void closeWriter(){
+		try {
+			bw.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -27,7 +72,7 @@ public class EvolveShip {
 		ships.add(0, s);
 		
 		/* get ship type number */
-		int shipTypeNumber = ShipType.getShipTypeNumber(s);
+		double shipTypeNumber = ShipType.getShipTypeNumber(s);
 		
 
 		
@@ -60,8 +105,8 @@ public class EvolveShip {
 	
 	public static ArrayList <Ship> evolve(ArrayList <Ship> ships, ArrayList<ArrayList<Score>> scoreMatrix){
 		
-		int numberOfShips = scoreMatrix.get(0).size() - 1;
-		int [] shipScore = new  int [numberOfShips + 1];
+		int numberOfShips = ships.size();
+		int [] shipScore = new  int [numberOfShips];
 		int indexOfFittestShip = 0;
 		int highestScore = 0;
 		
@@ -72,7 +117,34 @@ public class EvolveShip {
 		for(ArrayList <Score> run : scoreMatrix){
 			for(int i = 0; i < shipScore.length; i++){
 				shipScore[i] += run.get(i).energy;
+				
+				
+				/*** print statistics ***/
+				try {
+					
+					bw.write(ShipType.getShipTypeNumber(ships.get(i)) + ",");
+					bw.write(ships.get(i).getScore().energy + ",");
+					bw.write(ships.get(i).getScore().hits + ",");
+					bw.write(ships.get(i).getScore().misses + ",");
+					bw.write(ships.get(i).getScore().time + ",");
+					bw.write("\n");
+					
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+				
 			}
+		}
+		
+		try {
+			
+			bw.write("\n\n");
+			bw.flush();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		/* find fittest ship */
@@ -96,7 +168,7 @@ public class EvolveShip {
 			Sensor sensor = newShip.getSensors().get(r.nextInt(16));
 			mutateSensor(sensor);
 		}
-		
+		newFleet.add(newShip);
 		
 		/* 3 parent crossover - randomly select 3 parents */
 		/* crossover at 1 points between 0 and 15 sensors */
@@ -104,12 +176,19 @@ public class EvolveShip {
 		/* redo population - 2 times */
 		for(int i = 2; i < numberOfShips; i++){
 			
-			int indexParent1 = r.nextInt(numberOfShips + 1);
-			int indexParent2 = r.nextInt(numberOfShips + 1);
-			int indexParent3 = r.nextInt(numberOfShips + 1);
+			int indexParent1 = r.nextInt(numberOfShips);
+			int indexParent2 = r.nextInt(numberOfShips);
+			int indexParent3 = r.nextInt(numberOfShips);
 			
-			int point1 = r.nextInt(16);
-			int point2 = r.nextInt(16);
+			int point1=0;
+			int point2=0;
+			
+			while(point1 >= point2){
+				point1= r.nextInt(16);
+				point2= r.nextInt(16);
+			}
+			
+			
 			
 			Ship child = new Ship();
 			ArrayList <Sensor> sensors = new ArrayList <Sensor> ();
@@ -170,6 +249,13 @@ public class EvolveShip {
 			}
 			
 			child.setSensors(sensors);
+			
+			
+			//make sure all atleast one fire sensor is active
+			if(!child.getSensors().get(0).isActive() && !child.getSensors().get(12).isActive())
+				child.getSensors().get(0).setActive(true);
+			
+			
 			newFleet.add(child);
 		}
 		

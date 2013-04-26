@@ -18,16 +18,16 @@ public class ShipType {
 
 	}
 	
-	public static Ship newInstance(int typeNumber, int defaultAction){
+	public static Ship newInstance(double shipTypeNumber, int defaultAction){
 		
 		Ship ship = new Ship();
 		
 		/* check for over flow */
-		typeNumber = (typeNumber > 65535) ? 65535 : typeNumber; 
+		shipTypeNumber = (shipTypeNumber > 65535) ? 65535 : shipTypeNumber; 
 		defaultAction = (defaultAction > 15) ? 15 : defaultAction;
 		
 		/* create ship from typeNumber */
-		ship.setSensors(createSensors(typeNumber));
+		ship.setSensors(createSensors(shipTypeNumber));
 		ship.setDefaultAction(defaultAction);
 		
 		return ship;
@@ -40,18 +40,19 @@ public class ShipType {
 		
 		for(int i = 0; i < s.getSensors().size(); i++){
 			
-			if(s.getSensors().get(i).isActive())
-				tn += 2^i;
-			
+			if(s.getSensors().get(i).isActive()){
+				int temp = (int)Math.pow(2.0, (double)i);
+				tn += temp;
+			}
 		}
 		
 		return tn;
 	}
 	
-	static ArrayList <Sensor> createSensors(int typeNumber){
+	static ArrayList <Sensor> createSensors(double shipTypeNumber){
 
 		
-		String s = Integer.toBinaryString(typeNumber);
+		String s = Integer.toBinaryString((int)shipTypeNumber);
 		boolean [] active = new boolean[16];
 		
 		/* figure out which sensors to activate */

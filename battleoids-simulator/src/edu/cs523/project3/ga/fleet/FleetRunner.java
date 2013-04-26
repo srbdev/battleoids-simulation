@@ -10,7 +10,7 @@ import edu.cs523.project3.model.Ship;
 public class FleetRunner {
 
 	
-	private static int generations = 1;
+	private static int generations = 100;
 	
 	
 	public static void main(String[] args) {
@@ -62,6 +62,9 @@ public class FleetRunner {
 		Battlefield bf;
 		ArrayList<ArrayList<Score>> matrix;
 		
+		EvolveShip.createFileHeaders("test");
+		
+		
 		/* evolve ship */
 		for(int i = 0; i < generations; i++){
 			
@@ -73,6 +76,9 @@ public class FleetRunner {
 			/** should be able to do this with bf **/
 			ships = EvolveShip.evolve(ships, matrix);
 		}
+		
+		
+		EvolveShip.closeWriter();
 
 	}
 
