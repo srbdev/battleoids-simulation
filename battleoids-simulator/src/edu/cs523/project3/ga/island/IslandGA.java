@@ -21,8 +21,8 @@ public class IslandGA
 		ships = new ArrayList<Ship>();
 		this.populationSize = populationSize;
 		
-		this.crossoverRate = 0.1;
-		this.mutationRate = 0.1;
+		this.crossoverRate = 0.05;
+		this.mutationRate = 0.05;
 		
 		bestScore = 0;
 		avgScore = 0;
