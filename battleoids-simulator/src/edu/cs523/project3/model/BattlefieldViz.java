@@ -147,13 +147,18 @@ public class BattlefieldViz extends Thread {
 	    			this.k=0;
 	    		}else{
 	    			this.k++;
-	    			if(this.log[q][k][0].set==false){
-	    				this.q++;
-	    				this.k=0;
-	    			}
+	    			if(this.k!=b.getSteps()){
+		    			if(this.log[q][k][0].set==false){ //todo: index out of bounds?
+		    				this.q++;
+		    				this.k=0;
+		    			}
+		    		}else{
+		    			this.q++;
+		    			this.k=0;
+		    		}
 	    		}
 	    	}
-    		if(this.q!= b.getRuns())updateGame();
+    		if((this.q!= b.getRuns())&&(this.k!=b.getSteps()))updateGame();
     		else {
     			System.out.println("Finished Rendering.");
     			isRunning = false;
@@ -332,6 +337,10 @@ public class BattlefieldViz extends Thread {
     	for(int i=0;i<this.ships.size(); i++){
     		drawShip(g, this.ships.get(i), (""+(i+1)), b.getSize(), b.getMaxRange());
     	}
+    	g.setColor(Color.yellow);
+    	Font font = new Font("Courier New", Font.BOLD, 10);
+	    g.setFont(font);
+	    g.drawString("RUN " + (this.q+1) + " TIMESTEP "+ this.k, 5, 10);
 	     
     }
 
@@ -384,7 +393,7 @@ public class BattlefieldViz extends Thread {
 	     
 	    b.setCount(2);
 	    b.setMode(1);
-	    b.setRuns(2);
+	    b.setRuns(5);
 	    
     	new BattlefieldViz(b, true);
     }
