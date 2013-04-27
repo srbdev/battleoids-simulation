@@ -13,7 +13,7 @@ public class RunIslandGA {
 	private final static int N_ISLANDS = 4;
 	private final static int N_LOOPS = 10;
 	private final static int N_GENERATIONS = 10;
-	private final static int N_RUNS = 40;
+	private final static int N_RUNS = 5;
 	
 	private final static int POPULATION_SIZE = 25;
 	private final static int BATTLEFIELD_SIZE = 500;
@@ -88,6 +88,7 @@ public class RunIslandGA {
 					System.out.print("Running loop " + i + " GA No. " + j + " for generation " + k + "... ");
 					
 					Battlefield field = new Battlefield(ga.getShips(), N_RUNS, BATTLEFIELD_SIZE, 0);
+					field.run();
 					
 					ga.evolve();
 					
