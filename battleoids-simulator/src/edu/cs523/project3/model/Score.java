@@ -1,8 +1,12 @@
 package edu.cs523.project3.model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Score {
+public class Score implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8778558076808991721L;
 	public double energy=0.5, hits=0, misses=0;
 	public int time=0, count=0;
 	//public ArrayList<Integer> ship = new ArrayList<Integer>();

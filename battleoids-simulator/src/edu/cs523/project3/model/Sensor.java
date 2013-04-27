@@ -1,6 +1,12 @@
 package edu.cs523.project3.model;
 
-public class Sensor {
+import java.io.Serializable;
+
+public class Sensor implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 105806000893905364L;
 	private int mode;
 	private Arc arc = new Arc();
 	private boolean active;

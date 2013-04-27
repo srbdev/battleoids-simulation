@@ -1,13 +1,18 @@
 package edu.cs523.project3.model;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Nathan Rackley
  * The Battlefield Class handles the simulation of the entire battlefield.
  */
-public class Battlefield {
+public class Battlefield implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 781089958250885777L;
 	public static final int RANDOM = 0, SEEDED = 1;
 	private int randomSeed, runs=1, size=500, count, steps = 1000, mode=-1, maxRange = 100;
 	private double startX[], startY[], startA[], rotate = 0.02, distance = 4,shotDepletionRate=0.0, hitDepletionRate=0.01, hitRegenerationRate=0.01;;
@@ -54,7 +59,7 @@ public class Battlefield {
 			as[i] = ships.get(i).getFacing();
 		}	
 		//Here we locate the positioning information.
-		if(positioning==this.RANDOM) this.mode = 1;
+		if(positioning==Battlefield.RANDOM) this.mode = 1;
 		this.bfSet(ships, xs, ys, as, ships.size(), runs, size);
 	}
 	

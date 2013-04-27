@@ -1,6 +1,12 @@
 package edu.cs523.project3.model;
 
-public class Arc {
+import java.io.Serializable;
+
+public class Arc implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2549257527285324633L;
 	private double width=0, facing=0, range=0;
 	private double rangeError=0;
 	public Arc(double facing, double width, double range) {

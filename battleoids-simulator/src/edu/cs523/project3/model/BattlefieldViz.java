@@ -20,6 +20,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -38,10 +39,11 @@ public class BattlefieldViz extends Thread {
     private int height = 500;
     private double scale = 1;
     //Define Ship
-    Ship ship = new Ship();								//new ship
-    Ship ship2 = new Ship();
+    ArrayList<Ship> ships = new ArrayList<Ship>();
     //Battlefield
     Battlefield b = new Battlefield();
+    //Ship Log
+    ShipLog[][][] log;
     
     private GraphicsConfiguration config =
     		GraphicsEnvironment.getLocalGraphicsEnvironment()
@@ -56,7 +58,22 @@ public class BattlefieldViz extends Thread {
     }
 
     // Setup
-    public BattlefieldViz() {
+    /**
+     * Pass a battlefield into visualizer for rendering.
+     * @param b The battlefield to render.
+     * @param run True if the battlefield should be executed before rendering. False if already pre-rendered.
+     */
+    public BattlefieldViz(Battlefield b, boolean run) {
+    	//Load in battlefield info.
+    	this.b = b;
+    	
+    	//IF the run flag is set, run the simulation.
+    	if(run==true) this.b.run(true);    	
+    	
+    	//Set local references for rendering.
+    	this.ships = b.getShips();
+    	this.log = b.getLog();
+    	
     	// JFrame
     	frame = new JFrame();
     	frame.addWindowListener(new FrameClose());
@@ -76,50 +93,7 @@ public class BattlefieldViz extends Thread {
     		strategy = canvas.getBufferStrategy();
     	} while (strategy == null);
     	
-    	
-    	//Ship
-    	ship.setFacing(0.5);									//Set ship Facing.
-        ship.setLocation(new Point(250,250));
-        ship.setDefaultAction(Action.MOVE);
-       /* Score sc = ship.getScore();
-        sc.energy = 0;
-        ship.setScore(sc);
-        System.out.println(ship.getScore().energy);*/
-        
-        Arc marcS = new Arc(0, .25, 1.0);					//sensor arc defined
-	     Sensor sensS = new Sensor(2, marcS, true);			//sensor defined
-	     sensS.setActive(true);
-	     ship2.getSensors().add(sensS);							//add sensor to ship
-	     
-        
-        ship2.setFacing(1.5);
-        ship2.setDefaultAction(Action.RIGHT);
-        ship2.setLocation(new Point(300, 200));
-        Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
-	     Sensor sens = new Sensor(2, marc, true);			//sensor defined
-	     sens.setActive(true);
-	     ship.getSensors().add(sens);							//add sensor to ship
-	     
-	     Arc marc2 = new Arc(.5, 1.0, .75);					//sensor arc defined
-	     Sensor sens2 = new Sensor(4, marc2, true);			//sensor defined
-	     sens2.setActive(true);
-	     ship.getSensors().add(sens2);							//add sensor to ship
-	     
-	     Arc marc3 = new Arc(1.5, 1.0, .75);					//sensor arc defined
-	     Sensor sens3 = new Sensor(8, marc3, true);			//sensor defined
-	     sens3.setActive(true);
-	     ship.getSensors().add(sens3);							//add sensor to ship
-	     
-	     Arc marc4 = new Arc(0, .5, .875);					//sensor arc defined
-	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
-	     sens4.setActive(true);
-	     ship.getSensors().add(sens4);							//add sensor to ship
-        //Battlefield
-	     this.b.getShips().add(ship);
-	     this.b.getShips().add(ship2);
-	     
-	    b.setCount(2);
-	     
+    	//Begin rendering.
     	start();
     }
 
@@ -199,7 +173,9 @@ public class BattlefieldViz extends Thread {
     public void updateGame() {
     	// update game logic here
     	if(currentsteps < steps){
-    		b.run();
+    		//todo: calculate based on old runs.
+    		
+    		//b.run();
     		//this.ship.setFacing((this.ship.getFacing()+0.01)%2);
     		currentsteps++;
     	}
@@ -282,7 +258,7 @@ public class BattlefieldViz extends Thread {
 	public void drawShip(Graphics2D g, Ship s, String label, int boardSize, int maxRange){
 
 	     //Board Declaration
-	     int size = boardSize/2;
+	     //int size = boardSize/2;
 	     //int maxRange = size - 50;
 	     int shipSize = boardSize/50;
 	     
@@ -337,12 +313,61 @@ public class BattlefieldViz extends Thread {
     public void renderGame(Graphics2D g) {
     	g.setColor(Color.BLACK);
     	g.fillRect(0, 0, width, height);
-    	drawShip(g, this.ship, "1", b.getSize(), b.getMaxRange());
-    	drawShip(g, this.ship2, "2", b.getSize(), b.getMaxRange());
+    	for(int i=0;i<this.ships.size(); i++){
+    		drawShip(g, this.ships.get(i), (""+(i+1)), b.getSize(), b.getMaxRange());
+    	}
 	     
     }
 
     public static void main(final String args[]) {
-    	new BattlefieldViz();
+    	//ArrayList<Ship> s = new ArrayList<Ship>();
+    	
+    	Ship ship = new Ship();
+    	Ship ship2 = new Ship();
+    	Battlefield b = new Battlefield();
+    	//Ship
+    	ship.setFacing(0.5);									//Set ship Facing.
+        ship.setLocation(new Point(250,250));
+        ship.setDefaultAction(Action.MOVE);
+       /* Score sc = ship.getScore();
+        sc.energy = 0;
+        ship.setScore(sc);
+        System.out.println(ship.getScore().energy);*/
+        
+        Arc marcS = new Arc(0, .25, 1.0);					//sensor arc defined
+	     Sensor sensS = new Sensor(2, marcS, true);			//sensor defined
+	     sensS.setActive(true);
+	     ship2.getSensors().add(sensS);							//add sensor to ship
+	     
+        
+        ship2.setFacing(1.5);
+        ship2.setDefaultAction(Action.RIGHT);
+        ship2.setLocation(new Point(300, 200));
+        Arc marc = new Arc(0, .25, 1.0);					//sensor arc defined
+	     Sensor sens = new Sensor(2, marc, true);			//sensor defined
+	     sens.setActive(true);
+	     ship.getSensors().add(sens);							//add sensor to ship
+	     
+	     Arc marc2 = new Arc(.5, 1.0, .75);					//sensor arc defined
+	     Sensor sens2 = new Sensor(4, marc2, true);			//sensor defined
+	     sens2.setActive(true);
+	     ship.getSensors().add(sens2);							//add sensor to ship
+	     
+	     Arc marc3 = new Arc(1.5, 1.0, .75);					//sensor arc defined
+	     Sensor sens3 = new Sensor(8, marc3, true);			//sensor defined
+	     sens3.setActive(true);
+	     ship.getSensors().add(sens3);							//add sensor to ship
+	     
+	     Arc marc4 = new Arc(0, .5, .875);					//sensor arc defined
+	     Sensor sens4 = new Sensor(1, marc4, true);			//sensor defined
+	     sens4.setActive(true);
+	     ship.getSensors().add(sens4);							//add sensor to ship
+        //Battlefield
+	     b.getShips().add(ship);
+	     b.getShips().add(ship2);
+	     
+	    b.setCount(2);
+	    
+    	new BattlefieldViz(b, true);
     }
 }

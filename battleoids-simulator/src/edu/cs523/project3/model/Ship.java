@@ -1,9 +1,14 @@
 package edu.cs523.project3.model;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ship {
+public class Ship implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8388882539325496365L;
 	private Point location = new Point(0,0);
 	public double x=0;
 	public double y=0;
