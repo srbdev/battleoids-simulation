@@ -34,14 +34,16 @@ public class BattlefieldViz extends Thread {
     private Graphics2D graphics;
     private JFrame frame;
     private int steps = 1;
+    private boolean runs[];
     private int currentsteps = 0;
     private int width = 500;
     private int height = 500;
     private double scale = 1;
+    private int q=0, k=0, i=0;
     //Define Ship
-    ArrayList<Ship> ships = new ArrayList<Ship>();
+    ArrayList<Ship> ships;
     //Battlefield
-    Battlefield b = new Battlefield();
+    Battlefield b;
     //Ship Log
     ShipLog[][][] log;
     
@@ -73,7 +75,7 @@ public class BattlefieldViz extends Thread {
     	//Set local references for rendering.
     	this.ships = b.getShips();
     	this.log = b.getLog();
-    	
+    	System.out.println("Beginning Render...");
     	// JFrame
     	frame = new JFrame();
     	frame.addWindowListener(new FrameClose());
@@ -138,7 +140,24 @@ public class BattlefieldViz extends Thread {
     	//long fpsWait = (long) 0.0;
     	main: while (isRunning) {
     		long renderStart = System.nanoTime();
-    		updateGame();
+    		//todo: Here is where we update the graphics.
+    		if(this.q < b.getRuns()){
+	    		if(this.k==b.getSteps()){
+	    			this.q++;
+	    			this.k=0;
+	    		}else{
+	    			this.k++;
+	    			if(this.log[q][k][0].set==false){
+	    				this.q++;
+	    				this.k=0;
+	    			}
+	    		}
+	    	}
+    		if(this.q!= b.getRuns())updateGame();
+    		else {
+    			System.out.println("Finished Rendering.");
+    			isRunning = false;
+    		}
 
     		// Update Graphics
     		do {
@@ -172,13 +191,10 @@ public class BattlefieldViz extends Thread {
 
     public void updateGame() {
     	// update game logic here
-    	if(currentsteps < steps){
-    		//todo: calculate based on old runs.
-    		
-    		//b.run();
-    		//this.ship.setFacing((this.ship.getFacing()+0.01)%2);
-    		currentsteps++;
-    	}
+    	for(int i=0; i<b.getCount();i++){
+    	//Here we apply the log back to the ship
+ 			this.ships.get(i).setFromLog(this.log[q][k][i]);
+   		}
     }
     /**
 	 * Draws a pie shaped outline.
@@ -367,6 +383,8 @@ public class BattlefieldViz extends Thread {
 	     b.getShips().add(ship2);
 	     
 	    b.setCount(2);
+	    b.setMode(1);
+	    b.setRuns(2);
 	    
     	new BattlefieldViz(b, true);
     }

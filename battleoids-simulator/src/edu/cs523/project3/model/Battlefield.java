@@ -409,7 +409,12 @@ public class Battlefield implements Serializable{
 	public void setMaxRange(int maxRange) {
 		this.maxRange = maxRange;
 	}
-	
+	public void setMode(int mode){
+		this.mode = mode;
+	}
+	public int getMode(){
+		return this.mode;
+	}
 	public int getCount(){
 		return this.count;
 	}

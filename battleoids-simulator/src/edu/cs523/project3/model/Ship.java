@@ -115,6 +115,27 @@ public class Ship implements Serializable{
 		this.x = x;
 		this.y = y;
 	}
+	
+	/**
+	 * Set the ship values based upon a pre-recorded log. Used during visualization.
+	 * @param s
+	 */
+	public void setFromLog(ShipLog s){
+		this.x = s.x;
+		this.y = s.y;
+		this.facing = s.facing;
+		this.fire = s.firing;
+		this.hit = s.hit;
+		Score sc = s.score;
+		this.score = new Score(sc.energy, sc.hits, sc.misses, sc.time, sc.ship, sc.count);
+		for(int i=0;i<this.sensors.size();i++){
+			//Reverse to set triggered sensors.
+			if((s.sensors & (1<<i)) > 0){
+				this.sensors.get(i).setTriggered(true);
+			} else this.sensors.get(i).setTriggered(false);
+		}
+	}
+	
 	public void setLocation(int x, int y){
 		this.setLocation((double)x,(double)y);
 	}
