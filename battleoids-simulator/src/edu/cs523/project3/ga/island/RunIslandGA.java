@@ -14,8 +14,8 @@ public class RunIslandGA {
 
 	private final static int N_ISLANDS = 4;
 	private final static int N_LOOPS = 10;
-	private final static int N_GENERATIONS = 10;
-	private final static int N_RUNS = 1;
+	private final static int N_GENERATIONS = 50;
+	private final static int N_RUNS = 4;
 	
 	private final static int POPULATION_SIZE = 25;
 	private final static int BATTLEFIELD_SIZE = 500;
@@ -96,6 +96,13 @@ public class RunIslandGA {
 					double gaBestScore = 0.0;
 					double gaAverageScore = 0.0;
 					Ship gaFittestShip = null;
+					
+					if (ga.getShips().size() == 0) System.err.println("[ERROR] NO SHIPS IN GA!");
+					for (Ship s : ga.getShips())
+					{
+						if (s == null)
+							System.err.println("[ERROR] NULL SHIPS IN GA " + j);
+					}
 					
 					Battlefield field = new Battlefield(ga.getShips(), N_RUNS, BATTLEFIELD_SIZE, 0);
 					ArrayList<ArrayList<Score>> results = field.run();
