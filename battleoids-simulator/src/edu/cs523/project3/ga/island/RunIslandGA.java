@@ -4,8 +4,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import edu.cs523.project3.model.Battlefield;
+import edu.cs523.project3.model.Score;
 import edu.cs523.project3.model.Ship;
 
 public class RunIslandGA {
@@ -13,7 +15,7 @@ public class RunIslandGA {
 	private final static int N_ISLANDS = 4;
 	private final static int N_LOOPS = 10;
 	private final static int N_GENERATIONS = 10;
-	private final static int N_RUNS = 5;
+	private final static int N_RUNS = 1;
 	
 	private final static int POPULATION_SIZE = 25;
 	private final static int BATTLEFIELD_SIZE = 500;
@@ -71,6 +73,9 @@ public class RunIslandGA {
 		System.out.println("[INFO] Starting simulation.");
 		RunIslandGA run = new RunIslandGA();
 		
+		Ship simulationBestShip = null;
+		double simulationBestScore = 0.0;
+		
 		for (int i = 0; i < N_LOOPS; i++)
 		{
 			IslandGA[] currentGAs = run.getIslandGAs();
@@ -87,31 +92,62 @@ public class RunIslandGA {
 				{
 					System.out.print("Running loop " + i + " GA No. " + j + " for generation " + k + "... ");
 					
+					double gaTotalScore = 0.0;
+					double gaBestScore = 0.0;
+					double gaAverageScore = 0.0;
+					Ship gaFittestShip = null;
+					
 					Battlefield field = new Battlefield(ga.getShips(), N_RUNS, BATTLEFIELD_SIZE, 0);
-					field.run();
+					ArrayList<ArrayList<Score>> results = field.run();
+					
+					for (ArrayList<Score> r : results) // for each runs...
+					{
+						int shipIndex = 0;
+						
+						for (Score s : r) // for each score/ship in current run...
+						{
+							gaTotalScore += s.energy;
+							
+							if (s.energy > gaBestScore) 
+							{
+								gaBestScore = s.energy;
+								gaFittestShip = ga.getShip(shipIndex);
+							}
+							
+							ga.getShip(shipIndex++).setScore(s);
+						}
+					}
+					
+					gaAverageScore = gaTotalScore / (POPULATION_SIZE * results.size());
 					
 					ga.evolve();
 					
 					try 
 					{
-						buffer.write(i + "," + j + "," + k + "," + ga.getAverageScore() + "," + ga.getBestScore() + "\n");
+						buffer.write(i + "," + j + "," + k + "," + String.format("%.2f", gaAverageScore) + "," + String.format("%.2f", gaBestScore) + "\n");
 					} 
 					catch (IOException e) 
 					{
 						e.printStackTrace();
 					}
 					
-					if (ga.getBestScore() > bestScore)
+					if (gaBestScore > bestScore)
 					{
-						bestShips[j] = ga.getFittestShip();
-						bestScore = ga.getBestScore();
+						bestShips[j] = gaFittestShip;
+						bestScore = gaBestScore;
 					}
 					
-					if (bestScore > overallBestScore)
+					if (gaBestScore > overallBestScore)
 					{
-						overallBestScore = bestScore;
+						overallBestScore = gaBestScore;
 						bestIndex = j;
-					}						
+					}	
+					
+					if (gaBestScore < simulationBestScore)
+					{
+						simulationBestScore = gaBestScore;
+						simulationBestShip = gaFittestShip;
+					}
 					
 					System.out.println("Done.");
 				}

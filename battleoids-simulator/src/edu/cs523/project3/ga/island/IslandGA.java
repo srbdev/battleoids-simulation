@@ -12,21 +12,13 @@ public class IslandGA
 	private ArrayList<Ship> ships;
 	private int populationSize;
 	
-	private double bestScore;
-	private double avgScore;
-	private Ship fittestShip;
-	
 	public IslandGA(int populationSize)
 	{
 		ships = new ArrayList<Ship>();
 		this.populationSize = populationSize;
 		
-		this.crossoverRate = 0.05;
+		this.crossoverRate = 0.1;
 		this.mutationRate = 0.05;
-		
-		bestScore = 0;
-		avgScore = 0;
-		fittestShip = null;
 		
 		init(); // initializes the GA
 	}
@@ -39,10 +31,6 @@ public class IslandGA
 		this.crossoverRate = 0.1;
 		this.mutationRate = 0.1;
 		
-		bestScore = 0;
-		avgScore = 0;
-		fittestShip = null;
-		
 		initWithSeed(seed); // initializes the GA
 	}
 	
@@ -53,10 +41,6 @@ public class IslandGA
 		this.populationSize = populationSize;
 		this.crossoverRate = crossoverRate;
 		this.mutationRate = mutationRate;
-		
-		bestScore = 0;
-		avgScore = 0;
-		fittestShip = null;
 		
 		init(); // initializes the GA
 	}
@@ -75,25 +59,6 @@ public class IslandGA
 	public void evolve() 
 	{
 		ArrayList<Ship> newShips = new ArrayList<Ship>();
-		
-		// collecting some statistics
-		bestScore = 0;
-		fittestShip = null;
-		double totalScores = 0;
-		
-		for (int i = 0; i < ships.size(); i++)
-		{
-			double energy = ships.get(i).getScore().energy;
-			
-			totalScores += energy;
-			if (energy > bestScore) 
-			{
-				bestScore = energy;
-				fittestShip = ships.get(i);
-			}
-		}
-		
-		avgScore = totalScores / ships.size();
 		
 		// evolution step
 		for (int i = 0; i < ships.size(); i++)
@@ -130,21 +95,6 @@ public class IslandGA
 		this.ships = newShips;
 	}
 	
-	
-	public double getBestScore()
-	{
-		return this.bestScore;
-	}
-	
-	public double getAverageScore()
-	{
-		return this.avgScore;
-	}
-	
-	public Ship getFittestShip()
-	{
-		return this.fittestShip;
-	}
 	
 	public ArrayList<Ship> getShips()
 	{
