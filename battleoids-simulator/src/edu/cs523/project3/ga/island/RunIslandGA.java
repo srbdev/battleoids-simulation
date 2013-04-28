@@ -14,8 +14,8 @@ public class RunIslandGA {
 
 	private final static int N_ISLANDS = 4;
 	private final static int N_LOOPS = 10;
-	private final static int N_GENERATIONS = 50;
-	private final static int N_RUNS = 4;
+	private final static int N_GENERATIONS = 10;
+	private final static int N_RUNS = 1;
 	
 	private final static int POPULATION_SIZE = 25;
 	private final static int BATTLEFIELD_SIZE = 500;
