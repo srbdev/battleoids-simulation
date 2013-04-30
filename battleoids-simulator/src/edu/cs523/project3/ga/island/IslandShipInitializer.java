@@ -11,7 +11,7 @@ import edu.cs523.project3.model.Ship;
 public class IslandShipInitializer 
 {
 	private final static double ON_SENSOR_PROB = 0.5;     // Probability that a sensor is initialized to ON
-	private final static int N_SENSORS = 10;			   // Number of sensors for the ship
+	private final static int N_SENSORS = 16;			   // Number of sensors for the ship
 	private final static int DEFAULT_ACTION = Action.MOVE; // Default action for the ships is to move.
 	
 	public IslandShipInitializer() {}

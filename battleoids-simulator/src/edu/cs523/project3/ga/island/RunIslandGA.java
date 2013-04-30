@@ -47,7 +47,7 @@ public class RunIslandGA {
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			buffer = new BufferedWriter(fw);
 			
-			buffer.write("loop,ga,generation,average score,best score\n");
+			buffer.write("generation,ga,average score,best score\n");
 		} 
 		catch (IOException e) 
 		{
@@ -70,7 +70,6 @@ public class RunIslandGA {
 	
 	public static void main(String[] args) 
 	{
-		System.out.println("[INFO] Starting simulation.");
 		RunIslandGA run = new RunIslandGA();
 		
 		Ship simulationBestShip = null;
@@ -90,8 +89,6 @@ public class RunIslandGA {
 				
 				for (int k = 0; k < N_GENERATIONS; k++)
 				{
-					System.out.print("Running loop " + i + " GA No. " + j + " for generation " + k + "... ");
-					
 					double gaTotalScore = 0.0;
 					double gaBestScore = 0.0;
 					double gaAverageScore = 0.0;
@@ -131,7 +128,7 @@ public class RunIslandGA {
 					
 					try 
 					{
-						buffer.write(i + "," + j + "," + k + "," + String.format("%.2f", gaAverageScore) + "," + String.format("%.2f", gaBestScore) + "\n");
+						buffer.write((k + (N_GENERATIONS * i)) + "," + j + "," + String.format("%.2f", gaAverageScore) + "," + String.format("%.2f", gaBestScore) + "\n");
 					} 
 					catch (IOException e) 
 					{
@@ -155,8 +152,6 @@ public class RunIslandGA {
 						simulationBestScore = gaBestScore;
 						simulationBestShip = gaFittestShip;
 					}
-					
-					System.out.println("Done.");
 				}
 			}
 			
